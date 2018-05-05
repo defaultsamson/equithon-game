@@ -15,7 +15,7 @@ function gamePreload() {
 
     // Loading Images
     game.load.image("tiles", "assets/tiles.png");
-    game.load.image("player", "assets/circular belgua.png");
+    game.load.image("player", "assets/player.png");
 
     game.load.image("juicebox", "assets/juice.png"); //at
 
