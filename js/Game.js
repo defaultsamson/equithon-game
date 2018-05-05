@@ -92,7 +92,7 @@ function gameCreate() {
     juicebox.body.immovable = true;
     
     arrow=game.add.sprite(400, 0, "arrow"); //pointer on health bar
-
+    
     glucoseBar = game.add.sprite(glucoseBarX, glucoseBarY, "healthbar")
     glucoseBar.fixedToCamera = true;
     glucoseBar.width = 700;
@@ -115,7 +115,7 @@ function gameCreate() {
 }
 
 var xOffset = 0;
-var bloodSugar = 90; //at to keep track of bloodsugar on metre
+var bloodSugar = 100; //at to keep track of bloodsugar on metre
 
 function addMap(toAdd) {
 
@@ -170,7 +170,6 @@ var touchingGround = false;
 
 function changeBloodSugar(degOfChange) {
     bloodSugar += degOfChange;
-    arrow.x +=10;
     juicebox.destroy();
     console.log(bloodSugar)
 }
@@ -194,10 +193,10 @@ function gameUpdate() {
         player.body.velocity.x = 0;
     } else if (rightKey.isDown) {
         player.body.velocity.x = 300;
-        arrow.x-=1
+        bloodSugar-=0.25; 
     } else if (leftKey.isDown) {
         player.body.velocity.x = -300;
-        arrow.x-=1;
+        bloodSugar-=0.25;
     } else {
         player.body.velocity.x *= 0.75;
     }
@@ -225,6 +224,11 @@ function gameUpdate() {
     //at - if collision happens between player and juicebox
     this.game.physics.arcade.collide(player, juicebox, () => {changeBloodSugar(10)}); //check line 114
     glucoseText.setText(glucoseTextPrefix + bloodSugar);
+    
+    
+    //updating arrow position
+    //arrow.x+=INCHING; //try to find a better way of doing this less;
+    arrow.x=game.camera.x+bloodSugar*3.6;
 }
 
 function endGame() {
