@@ -257,7 +257,7 @@ var touchingGround = false;
 
 function changeBloodSugar(degOfChange) {
     bloodSugar += degOfChange;
-    arrow.x += 10;
+    
     juicebox.destroy();
     console.log(bloodSugar)
 }
@@ -279,10 +279,10 @@ function gameUpdate() {
         player.body.velocity.x = 0;
     } else if (rightKey.isDown) {
         player.body.velocity.x = 300;
-        arrow.x -= 1;
+        bloodSugar-=0.25;
     } else if (leftKey.isDown) {
         player.body.velocity.x = -300;
-        arrow.x -= 1;
+        bloodSugar-=0.25;
     } else {
         player.body.velocity.x *= 0.75;
     }
@@ -294,7 +294,7 @@ function gameUpdate() {
     }
 
     // End game if player falls off screen
-    if (player.x < -20) {
+    if (player.x < 1 || player.y>399) {
         endGame();
     }
 
@@ -319,10 +319,15 @@ function gameUpdate() {
     sky2.tilePosition.x -= delta * 0.4 * 0.4;
     sky3.tilePosition.x -= delta * 0.5 * 0.5;
     sky4.tilePosition.x -= delta * 0.6 * 0.6;
+    
+    arrow.x=game.camera.x+bloodSugar*3.6;
+
 }
 
+//
 var skyPrevX = 0;
 
+//fixing arrow motion
 function endGame() {
 
 }
