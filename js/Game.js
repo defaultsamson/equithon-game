@@ -22,7 +22,7 @@ function gamePreload() {
     game.load.image("healthbar", "assets/healthBar.png");
 
     /* // Spritesheet loading example
-    this.load.spritesheet('dude', 
+    this.load.spritesheet('dude',
     'src/games/firstgame/assets/dude.png',
     { frameWidth: 32, frameHeight: 48 }
     );
@@ -52,7 +52,7 @@ function gameCreate() {
     // good example of loading a player animation spritesheet
     // https://phaser.io/tutorials/making-your-first-phaser-3-game/part5
 
-    
+
     // binds the UP arrow key to the jump function
     jumpKey = game.input.keyboard.addKey(Phaser.Keyboard.UP);
     // jumpKey.onDown.add(jump, this);
@@ -75,7 +75,7 @@ function gameCreate() {
     player.scale.setTo(0.25, 0.25);
     game.physics.enable(player); // Gives player a physics body
     player.body.bounce.x = 0.05; // Slightly bouncy off wall
-    player.body.collideWorldBounds = true; // Collide with the 
+    player.body.collideWorldBounds = true; // Collide with the
 
     juicebox = game.add.sprite(100, 100, "juicebox"); //at help random spawning...
     game.physics.enable(juicebox); //gives juicebox sprite a physics body at
@@ -86,7 +86,7 @@ function gameCreate() {
     glucoseBar.fixedToCamera = true;
     glucoseBar.width = 800;
     glucoseBar.length = 32;
-    
+
     // TODO
     //game.camera.follow(player)
 
@@ -117,7 +117,7 @@ function addMap(toAdd) {
         }
     }
 
-    xOffset += width
+    xOffset += width;
 }
 
 function getYOffset(data, width, height) {
@@ -134,7 +134,7 @@ function getYOffset(data, width, height) {
     for (var y = 0; y < height; y++) {
         // Empty tile
         if (data[y * width] == 0) {
-            offsetHeight++
+            offsetHeight++;
         } else {
             break;
         }
@@ -155,11 +155,12 @@ var touchingGround = false;
 
 function changeBloodSugar(degOfChange) {
     bloodSugar += degOfChange;
-    
-    console.log("dank")
+    console.log("dank");
+
+    }
 }
 
-//check over code; how to randomly spawn juiceboxes; way to show metre in a fixed number; 
+//check over code; how to randomly spawn juiceboxes; way to show metre in a fixed number;
 
 
 var vibrateTicks = 0;
