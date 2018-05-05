@@ -40,11 +40,16 @@ var leftKey;
 var jumpKey;
 
 var glucoseBar;
+var glucoseTextPrefix = "Glucose Level (mg/dL): "
+var glucoseText;
 
 const worldWidth = 400;
 const worldHeight = 19;
 const blockWidth = 32;
 const blockHeight = 32;
+
+const glucoseBarX = 50;
+const glucoseBarY = 32;
 
 // Create game objects
 function gameCreate() {
@@ -88,11 +93,15 @@ function gameCreate() {
     
     arrow=game.add.sprite(400, 0, "arrow"); //pointer on health bar
 
-    glucoseBar = game.add.sprite(0, 0, "healthbar")
+    glucoseBar = game.add.sprite(glucoseBarX, glucoseBarY, "healthbar")
     glucoseBar.fixedToCamera = true;
-    glucoseBar.width = 800;
-    glucoseBar.length = 32;
-    
+    glucoseBar.width = 700;
+    glucoseBar.height = 20;
+
+    var textStyle = {'font' : "16pt Comic Sans MS"}
+    glucoseText = game.add.text(300, 0, glucoseTextPrefix, textStyle)
+    glucoseText.fixedToCamera = true;
+
     // TODO
     //game.camera.follow(player)
 
@@ -215,6 +224,7 @@ function gameUpdate() {
 
     //at - if collision happens between player and juicebox
     this.game.physics.arcade.collide(player, juicebox, () => {changeBloodSugar(10)}); //check line 114
+    glucoseText.setText(glucoseTextPrefix + bloodSugar);
 }
 
 function endGame() {
