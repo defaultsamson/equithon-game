@@ -1,26 +1,8 @@
-/*
-var config = {
-    type: Phaser.AUTO,
-    width: 640,
-    height: 480,
-    parent: 'phaser-game',
-    scene: [SceneMain],
-    backgroundColor: "#00CCEE",
-    physics: {
-        default: 'arcade',
-        arcade: {
-            gravity: {
-                y: 1900
-            }
-        }
-    }
-};
-*/
-
-//var game = new Phaser.Game(config);
+const WIDTH = 800;
+const HEIGHT = 600;
 
 // Creates the game object
-var game = new Phaser.Game(800, 600, Phaser.AUTO, "game");
+var game = new Phaser.Game(WIDTH, HEIGHT, Phaser.AUTO, "game");
 
 // Registers the game states
 // TODO? game.state.add('Boot');
