@@ -183,7 +183,11 @@ function gameUpdate() {
         player.x = cameraOff;
     }
 
-    this.game.physics.arcade.collide(player, layer0, () => {touchingGround = true;});
+    // check if touching ground and handle collisions
+    this.game.physics.arcade.collide(player, layer0, (sprite, tile) => {if (sprite.body.onFloor()) {
+                                                                            touchingGround = true;
+                                                                        }
+                                                                    });
 
     //at - if collision happens between player and juicebox
     this.game.physics.arcade.collide(player, juicebox, changeBloodSugar(10)); //check line 114
