@@ -19,6 +19,11 @@ function gamePreload() {
 
     game.load.image("juicebox", "assets/juice.png"); //at
 
+    game.load.image("healthbar", "assets/healthBar.png");
+    
+    game.load.image("arrow", "assets/arrow.png");
+    
+
     /* // Spritesheet loading example
     this.load.spritesheet('dude', 
     'src/games/firstgame/assets/dude.png',
@@ -34,10 +39,17 @@ var rightKey;
 var leftKey;
 var jumpKey;
 
+var glucoseBar;
+var glucoseTextPrefix = "Glucose Level (mg/dL): "
+var glucoseText;
+
 const worldWidth = 400;
 const worldHeight = 19;
 const blockWidth = 32;
 const blockHeight = 32;
+
+const glucoseBarX = 50;
+const glucoseBarY = 32;
 
 // Create game objects
 function gameCreate() {
@@ -73,10 +85,23 @@ function gameCreate() {
     player.body.bounce.x = 0.05; // Slightly bouncy off wall
     player.body.collideWorldBounds = true; // Collide with the 
 
-    juicebox = game.add.sprite(100, 100, "juicebox"); //at help random spawning...
+    juicebox = game.add.sprite(500, 200, "juicebox"); //at help random spawning...
+    juicebox.scale.setTo(0.5, 0.5);
     game.physics.enable(juicebox); //gives juicebox sprite a physics body at
-    juicebox.body.allowGravity = false
+    juicebox.body.allowGravity = false;
+    juicebox.body.immovable = true;
     
+    arrow=game.add.sprite(400, 0, "arrow"); //pointer on health bar
+
+    glucoseBar = game.add.sprite(glucoseBarX, glucoseBarY, "healthbar")
+    glucoseBar.fixedToCamera = true;
+    glucoseBar.width = 700;
+    glucoseBar.height = 20;
+
+    var textStyle = {'font' : "16pt Comic Sans MS"}
+    glucoseText = game.add.text(300, 0, glucoseTextPrefix, textStyle)
+    glucoseText.fixedToCamera = true;
+
     // TODO
     //game.camera.follow(player)
 
@@ -204,8 +229,9 @@ var touchingGround = false;
 
 function changeBloodSugar(degOfChange) {
     bloodSugar += degOfChange;
-    
-    console.log("dank")
+    arrow.x +=10;
+    juicebox.destroy();
+    console.log(bloodSugar)
 }
 
 //check over code; how to randomly spawn juiceboxes; way to show metre in a fixed number; 
@@ -220,13 +246,17 @@ function gameUpdate() {
     cameraOff = Math.max(cameraOff + INCHING, player.x + 16 - (2 * WIDTH / 3));
     game.camera.x = cameraOff;
 
+    
+    
     // Maps controls to velocity
     if (rightKey.isDown && leftKey.isDown) {
         player.body.velocity.x = 0;
     } else if (rightKey.isDown) {
         player.body.velocity.x = 300;
+        arrow.x-=1
     } else if (leftKey.isDown) {
         player.body.velocity.x = -300;
+        arrow.x-=1;
     } else {
         player.body.velocity.x *= 0.75;
     }
@@ -253,6 +283,7 @@ function gameUpdate() {
 
     //at - if collision happens between player and juicebox
     this.game.physics.arcade.collide(player, juicebox, () => {changeBloodSugar(10)}); //check line 114
+    glucoseText.setText(glucoseTextPrefix + bloodSugar);
 }
 
 function endGame() {
