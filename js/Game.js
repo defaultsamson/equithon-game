@@ -48,6 +48,7 @@ function gameCreate() {
     // good example of loading a player animation spritesheet
     // https://phaser.io/tutorials/making-your-first-phaser-3-game/part5
 
+    
     // binds the UP arrow key to the jump function
     jumpKey = game.input.keyboard.addKey(Phaser.Keyboard.UP);
     // jumpKey.onDown.add(jump, this);
@@ -67,6 +68,7 @@ function gameCreate() {
     addMap("house")
 
     player = game.add.sprite(40, 40, "player");
+    player.scale.setTo(0.25, 0.25);
     game.physics.enable(player); // Gives player a physics body
     player.body.bounce.x = 0.05; // Slightly bouncy off wall
     player.body.collideWorldBounds = true; // Collide with the 
@@ -143,6 +145,7 @@ var touchingGround = false;
 
 function changeBloodSugar(degOfChange) {
     bloodSugar += degOfChange;
+    
     console.log("dank")
 }
 
