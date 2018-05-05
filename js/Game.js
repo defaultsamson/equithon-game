@@ -17,6 +17,8 @@ function gamePreload() {
     game.load.image("tiles", "assets/tiles.png");
     game.load.image("player", "assets/player.png");
 
+    game.load.image("juicebox", "assets/juice.png"); //at
+
     /* // Spritesheet loading example
     this.load.spritesheet('dude', 
     'src/games/firstgame/assets/dude.png',
@@ -68,6 +70,10 @@ function gameCreate() {
     player.body.bounce.x = 0.05; // Slightly bouncy off wall
     player.body.collideWorldBounds = true; // Collide with the 
 
+    juicebox = game.add.sprite(100, 100, "juicebox"); //at help random spawning...
+    game.physics.enable(juicebox); //gives juicebox sprite a physics body at
+    juicebox.body.allowGravity = false
+    
     // TODO
     //game.camera.follow(player)
 
@@ -81,6 +87,7 @@ function gameCreate() {
 }
 
 var xOffset = 0;
+var bloodSugar = 90; //at to keep track of bloodsugar on metre
 
 function addMap(toAdd) {
 
@@ -131,6 +138,17 @@ function jump() {
 const INCHING = 0.5
 var cameraOff = 0
 
+function changeBloodSugar(degOfChange) {
+    bloodSugar += degOfChange;
+    console.log("dank")
+}
+
+//check over code; how to randomly spawn juiceboxes; way to show metre in a fixed number; 
+
+
+var vibrateTicks = 0;
+var up = false;
+
 // Update game objects
 function gameUpdate() {
     // Makes the camera move to the left when the player pushes the viewport forward
@@ -156,5 +174,10 @@ function gameUpdate() {
 
     this.game.physics.arcade.collide(player, layer0);
 
-    game.debug.body(player)
+    //at - if collision happens between player and juicebox
+    this.game.physics.arcade.collide(player, juicebox, changeBloodSugar(10)); //check line 114
+}
+
+function endGame() {
+
 }
