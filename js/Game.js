@@ -154,10 +154,15 @@ var cameraOff = 0
 var touchingGround = false;
 
 function changeBloodSugar(degOfChange) {
-    bloodSugar += degOfChange;
-    console.log("dank");
-
+    if (bloodSugar + degOfChange < 0) {
+        bloodSugar = 0;
+        console.log("not dank");
     }
+    else {
+        bloodSugar += degOfChange;
+        console.log("dank");
+    }
+  }
 }
 
 //check over code; how to randomly spawn juiceboxes; way to show metre in a fixed number;
