@@ -11,7 +11,7 @@ function gamePreload() {
     // Loading tilemaps
     //game.load.tilemap("start", "assets/start.json", null, Phaser.Tilemap.TILED_JSON)
     game.load.json("start", "assets/start.json");
-    game.load.json("house", "assets/house.json");
+    game.load.json("ruins", "assets/ruins.json");
 
     // Loading Images
     game.load.image("tiles", "assets/tiles.png");
@@ -36,7 +36,7 @@ function gamePreload() {
 }
 
 var map;
-var layer0;
+var layer1;
 
 var rightKey;
 var leftKey;
@@ -98,14 +98,17 @@ function gameCreate() {
 
     map = game.add.tilemap(); // Creates a blank tilemap
     map.addTilesetImage("tiles");
-    map.setCollisionBetween(0, 999);
 
-    layer0 = map.create("layer0", WORLD_WIDTH, WORLD_HEIGHT, BLOCK_WIDTH, BLOCK_HEIGHT);
-    layer0.resizeWorld();
+    layer0 = map.create("layer2", WORLD_WIDTH, WORLD_HEIGHT, BLOCK_WIDTH, BLOCK_HEIGHT);
+
+    layer1 = map.create("layer1", WORLD_WIDTH, WORLD_HEIGHT, BLOCK_WIDTH, BLOCK_HEIGHT);
+    layer1.resizeWorld();
+
+    map.setCollision([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 20, 26, 28, 32, 33, 34, 40, 41, 42, 43, 44, 45, 46, 48, 49, 50], true, layer1);
 
     addMap("start");
-    addMap("house");
-    addMap("house");
+    addMap("ruins");
+    addMap("ruins");
 
     player = game.add.sprite(40, 40, "player");
     player.scale.setTo(0.25, 0.25);
@@ -165,7 +168,7 @@ function addMap(toAdd) {
 
         if (!solidLayer) {
             for (var y = 0; y < height; y++) {
-                map.putTile(data[x + width * y] - 1, x + xOffset, y + yOffset);
+                map.putTile(data[x + width * y] - 1, x + xOffset, y + yOffset, layer0);
             }
         } else {
             var y = 0;
@@ -177,7 +180,7 @@ function addMap(toAdd) {
                     var id = data[x + width * y] - 1;
                     if (id >= 0) {
                         // Tile contains something, use it
-                        map.putTile(id, x + xOffset, yCoord);
+                        map.putTile(id, x + xOffset, yCoord, layer1);
                     } else {
                         // Tile is empty
                         // Check if all the other blocks in this column are empty
@@ -205,7 +208,7 @@ function addMap(toAdd) {
                             var yCoord3;
                             // replace all the following blocks with dirt
                             while ((yCoord3 = y3 + yOffset) < WORLD_HEIGHT) {
-                                map.putTile(DIRT_INDEX, x + xOffset, yCoord3);
+                                map.putTile(DIRT_INDEX, x + xOffset, yCoord3, layer1);
                                 y3++;
                             }
                             break;
@@ -213,7 +216,7 @@ function addMap(toAdd) {
                     }
                 } else {
                     // below the file, fill with dirty things
-                    map.putTile(DIRT_INDEX, x + xOffset, yCoord);
+                    map.putTile(DIRT_INDEX, x + xOffset, yCoord, layer1);
                 }
                 y++;
             }
@@ -225,7 +228,7 @@ function addMap(toAdd) {
 function getYOffset(data, width, height) {
     var startHeight = 0;
     for (var y = 0; y < WORLD_HEIGHT; y++) {
-        if (map.getTile(xOffset - 1, y)) {
+        if (map.getTile(xOffset - 1, y, layer1)) {
             break;
         } else {
             startHeight++;
@@ -258,6 +261,7 @@ var touchingGround = false;
 
 function changeBloodSugar(degOfChange) {
     bloodSugar += degOfChange;
+    
     juicebox.destroy();
     console.log(bloodSugar)
 }
@@ -305,16 +309,13 @@ function gameUpdate() {
         --player.y;
     }
 
-    // Prevents the player from going far left
-    if (player.x <= cameraOff && player.body.velocity.x < 0) {
-        player.x = cameraOff;
-        player.body.velocity.x = 0;
-    } else if (player.x < cameraOff) {
-        player.x = cameraOff;
+    // End game if player falls off screen
+    if (player.x < 1 || player.y>399) {
+        endGame();
     }
 
     // check if touching ground and handle collisions
-    this.game.physics.arcade.collide(player, layer0);
+    this.game.physics.arcade.collide(player, layer1);
     if (player.body.onFloor()) {
         touchingGround = true;
     }
@@ -331,6 +332,7 @@ function gameUpdate() {
     renderArrow();
 
     bloodSugar -= 1 / (2 ** 10);
+    // Moves the clouds based on camera movement
 
     var delta = game.camera.x - skyPrevX;
     skyPrevX = game.camera.x;
@@ -339,10 +341,15 @@ function gameUpdate() {
     sky2.tilePosition.x -= delta * 0.4 * 0.4;
     sky3.tilePosition.x -= delta * 0.5 * 0.5;
     sky4.tilePosition.x -= delta * 0.6 * 0.6;
+    
+    arrow.x=game.camera.x+bloodSugar*3.6;
+
 }
 
+//
 var skyPrevX = 0;
 
+//fixing arrow motion
 function endGame() {
 
 }
