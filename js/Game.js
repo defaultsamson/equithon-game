@@ -25,7 +25,7 @@ function gamePreload() {
     
 
     /* // Spritesheet loading example
-    this.load.spritesheet('dude', 
+    this.load.spritesheet('dude',
     'src/games/firstgame/assets/dude.png',
     { frameWidth: 32, frameHeight: 48 }
     );
@@ -60,7 +60,7 @@ function gameCreate() {
     // good example of loading a player animation spritesheet
     // https://phaser.io/tutorials/making-your-first-phaser-3-game/part5
 
-    
+
     // binds the UP arrow key to the jump function
     jumpKey = game.input.keyboard.addKey(Phaser.Keyboard.UP);
     // jumpKey.onDown.add(jump, this);
@@ -83,7 +83,7 @@ function gameCreate() {
     player.scale.setTo(0.25, 0.25);
     game.physics.enable(player); // Gives player a physics body
     player.body.bounce.x = 0.05; // Slightly bouncy off wall
-    player.body.collideWorldBounds = true; // Collide with the 
+    player.body.collideWorldBounds = true; // Collide with the
 
     juicebox = game.add.sprite(500, 200, "juicebox"); //at help random spawning...
     juicebox.scale.setTo(0.5, 0.5);
@@ -191,7 +191,7 @@ function addMap(toAdd) {
         }
     }
 
-    xOffset += width
+    xOffset += width;
 }
 
 function getYOffset(data, width, height) {
@@ -208,7 +208,7 @@ function getYOffset(data, width, height) {
     for (var y = 0; y < height; y++) {
         // Empty tile
         if (data[y * width] == 0) {
-            offsetHeight++
+            offsetHeight++;
         } else {
             break;
         }
@@ -234,7 +234,7 @@ function changeBloodSugar(degOfChange) {
     console.log(bloodSugar)
 }
 
-//check over code; how to randomly spawn juiceboxes; way to show metre in a fixed number; 
+//check over code; how to randomly spawn juiceboxes; way to show metre in a fixed number;
 
 
 var vibrateTicks = 0;
