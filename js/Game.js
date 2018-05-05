@@ -329,24 +329,12 @@ function gameUpdate() {
     }
 
     // check if touching ground and handle collisions
-<<<<<<< HEAD
-    this.game.physics.arcade.collide(player, layer1, (sprite, tile) => {
-        if (sprite.body.onFloor()) {
-            touchingGround = true;
-        }
-    });
-    
-    //spawn juice boxes
-    function spawnJuice(){
-        
-=======
     this.game.physics.arcade.collide(player, layer1);
     if (player.body.onFloor()) {
         touchingGround = true;
     }
     else {
         touchingGround = false;
->>>>>>> da3753a20bf94cf66d564d262148a88b97800065
     }
 
     //at - if collision happens between player and juicebox
