@@ -73,7 +73,7 @@ function gameCreate() {
     player.body.bounce.x = 0.05; // Slightly bouncy off wall
     player.body.collideWorldBounds = true; // Collide with the 
 
-    juicebox = game.add.sprite(100, 100, "juicebox"); //at help random spawning...
+    juicebox = game.add.sprite(game.rnd.integer(), 800), 100, "juicebox"); //at help random spawning...
     game.physics.enable(juicebox); //gives juicebox sprite a physics body at
     juicebox.body.allowGravity = false
     
@@ -145,8 +145,8 @@ var touchingGround = false;
 
 function changeBloodSugar(degOfChange) {
     bloodSugar += degOfChange;
-    
-    console.log("dank")
+    juicebox.destroy();
+    console.log(bloodSugar)
 }
 
 //check over code; how to randomly spawn juiceboxes; way to show metre in a fixed number; 
