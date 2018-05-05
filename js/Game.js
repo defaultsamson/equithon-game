@@ -11,7 +11,7 @@ function gamePreload() {
     // Loading tilemaps
     //game.load.tilemap("start", "assets/start.json", null, Phaser.Tilemap.TILED_JSON)
     game.load.json("start", "assets/start.json");
-    game.load.json("house", "assets/house.json");
+    game.load.json("ruins", "assets/ruins.json");
 
     // Loading Images
     game.load.image("tiles", "assets/tiles.png");
@@ -53,6 +53,8 @@ const BLOCK_HEIGHT = 32;
 
 const glucoseBarX = 50;
 const glucoseBarY = 32;
+const energyMove = 0.0625;
+const energyJump = 0.5;
 
 var sky0;
 var sky1;
@@ -115,11 +117,11 @@ function gameCreate() {
     layer1 = map.create("layer1", WORLD_WIDTH, WORLD_HEIGHT, BLOCK_WIDTH, BLOCK_HEIGHT);
     layer1.resizeWorld();
 
-    map.setCollisionBetween(0, 999, true, layer1);
+    map.setCollision([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 20, 26, 28, 32, 33, 34, 40, 41, 42, 43, 44, 45, 46, 48, 49, 50], true, layer1);
 
     addMap("start");
-    addMap("house");
-    addMap("house");
+    addMap("ruins");
+    addMap("ruins");
 
     player = game.add.sprite(40, 40, "player");
     player.scale.setTo(0.25, 0.25);
@@ -134,6 +136,7 @@ function gameCreate() {
     juicebox.body.immovable = true;
 
     arrow = game.add.sprite(400, 0, "arrow"); //pointer on health bar
+    arrow.fixedToCamera = true;
 
     glucoseBar = game.add.sprite(glucoseBarX, glucoseBarY, "healthbar");
     glucoseBar.fixedToCamera = true;
@@ -159,7 +162,7 @@ function gameCreate() {
 }
 
 var xOffset = 0;
-var bloodSugar = 100; //at to keep track of bloodsugar on metre
+var bloodSugar = 100; //at to keep track of bloodsugar on meter
 
 const DIRT_INDEX = 1;
 
@@ -262,6 +265,7 @@ function getYOffset(data, width, height) {
 function jump() {
     touchingGround = false;
     player.body.velocity.y = -800;
+    bloodSugar -= energyJump;
 }
 
 const CAMERA_SPEED = 0.5
@@ -276,11 +280,23 @@ function changeBloodSugar(degOfChange) {
     juiceSpawn();
 }
 
+function _mapArrow(sugar) {
+    // Old: (sugar - min) * (right side of health bar - left side of health bar) / (highest blood sugar - lowest blood sugar)
+    // return (sugar - 40) * (750 - 50) / (240 - 40);
+
+    // http://www.wolframalpha.com/input/?i=parabola+%7B(40,+0),(240,+700),(100,+350)%7D
+    return -1 / 60 * sugar * sugar + 49 / 6 * sugar - 300
+    
+}
+
+function renderArrow() {
+    // health bar is 0-700 pixels, want 40-240
+    arrow.cameraOffset.x = _mapArrow(bloodSugar);
+}
 //check over code; how to randomly spawn juiceboxes; way to show metre in a fixed number;
 
 
 var vibrateTicks = 0;
-var up = false;
 
 // Update game objects
 function gameUpdate() {
@@ -293,10 +309,10 @@ function gameUpdate() {
         player.body.velocity.x = 0;
     } else if (rightKey.isDown) {
         player.body.velocity.x = 300;
-        bloodSugar-=0.25;
+        bloodSugar -= energyMove;
     } else if (leftKey.isDown) {
         player.body.velocity.x = -300;
-        bloodSugar-=0.25;
+        bloodSugar -= energyMove;
     } else {
         player.body.velocity.x *= 0.75;
     }
@@ -313,6 +329,7 @@ function gameUpdate() {
     }
 
     // check if touching ground and handle collisions
+<<<<<<< HEAD
     this.game.physics.arcade.collide(player, layer1, (sprite, tile) => {
         if (sprite.body.onFloor()) {
             touchingGround = true;
@@ -322,15 +339,27 @@ function gameUpdate() {
     //spawn juice boxes
     function spawnJuice(){
         
+=======
+    this.game.physics.arcade.collide(player, layer1);
+    if (player.body.onFloor()) {
+        touchingGround = true;
+    }
+    else {
+        touchingGround = false;
+>>>>>>> da3753a20bf94cf66d564d262148a88b97800065
     }
 
     //at - if collision happens between player and juicebox
     this.game.physics.arcade.collide(player, juicebox, () => {
-        changeBloodSugar(10);
+        changeBloodSugar(30);
     }); //check line 114
-    glucoseText.setText(glucoseTextPrefix + bloodSugar);
+    glucoseText.setText(glucoseTextPrefix + Math.round(bloodSugar * 1000) / 1000);
 
+    renderArrow();
+
+    bloodSugar -= 1 / (2 ** 10);
     // Moves the clouds based on camera movement
+
     var delta = game.camera.x - skyPrevX;
     skyPrevX = game.camera.x;
     sky0.tilePosition.x -= delta * 0.2 * 0.2;
