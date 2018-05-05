@@ -11,7 +11,7 @@ function gamePreload() {
     // Loading tilemaps
     //game.load.tilemap("start", "assets/start.json", null, Phaser.Tilemap.TILED_JSON)
     game.load.json("start", "assets/start.json");
-    game.load.json("house", "assets/house.json");
+    game.load.json("ruins", "assets/ruins.json");
 
     // Loading Images
     game.load.image("tiles", "assets/tiles.png");
@@ -102,11 +102,11 @@ function gameCreate() {
     layer1 = map.create("layer1", WORLD_WIDTH, WORLD_HEIGHT, BLOCK_WIDTH, BLOCK_HEIGHT);
     layer1.resizeWorld();
 
-    map.setCollisionBetween(0, 999, true, layer1);
+    map.setCollision([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 20, 26, 28, 32, 33, 34, 40, 41, 42, 43, 44, 45, 46, 48, 49, 50], true, layer1);
 
     addMap("start");
-    addMap("house");
-    addMap("house");
+    addMap("ruins");
+    addMap("ruins");
 
     player = game.add.sprite(40, 40, "player");
     player.scale.setTo(0.25, 0.25);
