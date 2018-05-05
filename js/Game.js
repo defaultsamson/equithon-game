@@ -36,7 +36,7 @@ function gamePreload() {
 }
 
 var map;
-var layer0;
+var layer1;
 
 var rightKey;
 var leftKey;
@@ -96,10 +96,13 @@ function gameCreate() {
 
     map = game.add.tilemap(); // Creates a blank tilemap
     map.addTilesetImage("tiles");
-    map.setCollisionBetween(0, 999);
 
-    layer0 = map.create("layer0", WORLD_WIDTH, WORLD_HEIGHT, BLOCK_WIDTH, BLOCK_HEIGHT);
-    layer0.resizeWorld();
+    layer0 = map.create("layer2", WORLD_WIDTH, WORLD_HEIGHT, BLOCK_WIDTH, BLOCK_HEIGHT);
+
+    layer1 = map.create("layer1", WORLD_WIDTH, WORLD_HEIGHT, BLOCK_WIDTH, BLOCK_HEIGHT);
+    layer1.resizeWorld();
+
+    map.setCollisionBetween(0, 999, true, layer1);
 
     addMap("start");
     addMap("house");
@@ -119,7 +122,7 @@ function gameCreate() {
 
     arrow = game.add.sprite(400, 0, "arrow"); //pointer on health bar
 
-    glucoseBar = game.add.sprite(glucoseBarX, glucoseBarY, "healthbar")
+    glucoseBar = game.add.sprite(glucoseBarX, glucoseBarY, "healthbar");
     glucoseBar.fixedToCamera = true;
     glucoseBar.width = 700;
     glucoseBar.height = 20;
@@ -162,7 +165,7 @@ function addMap(toAdd) {
 
         if (!solidLayer) {
             for (var y = 0; y < height; y++) {
-                map.putTile(data[x + width * y] - 1, x + xOffset, y + yOffset);
+                map.putTile(data[x + width * y] - 1, x + xOffset, y + yOffset, layer0);
             }
         } else {
             var y = 0;
@@ -174,7 +177,7 @@ function addMap(toAdd) {
                     var id = data[x + width * y] - 1;
                     if (id >= 0) {
                         // Tile contains something, use it
-                        map.putTile(id, x + xOffset, yCoord);
+                        map.putTile(id, x + xOffset, yCoord, layer1);
                     } else {
                         // Tile is empty
                         // Check if all the other blocks in this column are empty
@@ -202,7 +205,7 @@ function addMap(toAdd) {
                             var yCoord3;
                             // replace all the following blocks with dirt
                             while ((yCoord3 = y3 + yOffset) < WORLD_HEIGHT) {
-                                map.putTile(DIRT_INDEX, x + xOffset, yCoord3);
+                                map.putTile(DIRT_INDEX, x + xOffset, yCoord3, layer1);
                                 y3++;
                             }
                             break;
@@ -210,7 +213,7 @@ function addMap(toAdd) {
                     }
                 } else {
                     // below the file, fill with dirty things
-                    map.putTile(DIRT_INDEX, x + xOffset, yCoord);
+                    map.putTile(DIRT_INDEX, x + xOffset, yCoord, layer1);
                 }
                 y++;
             }
@@ -222,7 +225,7 @@ function addMap(toAdd) {
 function getYOffset(data, width, height) {
     var startHeight = 0;
     for (var y = 0; y < WORLD_HEIGHT; y++) {
-        if (map.getTile(xOffset - 1, y)) {
+        if (map.getTile(xOffset - 1, y, layer1)) {
             break;
         } else {
             startHeight++;
@@ -276,10 +279,6 @@ function gameUpdate() {
         player.body.velocity.x = 0;
     } else if (rightKey.isDown) {
         player.body.velocity.x = 300;
-        bloodSugar -= 0.25;
-    } else if (leftKey.isDown) {
-        player.body.velocity.x = -300;
-        bloodSugar -= 0.25;
         arrow.x -= 1;
     } else if (leftKey.isDown) {
         player.body.velocity.x = -300;
@@ -294,16 +293,13 @@ function gameUpdate() {
         --player.y;
     }
 
-    // Prevents the player from going far left
-    if (player.x <= cameraOff && player.body.velocity.x < 0) {
-        player.x = cameraOff;
-        player.body.velocity.x = 0;
-    } else if (player.x < cameraOff) {
-        player.x = cameraOff;
+    // End game if player falls off screen
+    if (player.x < -20) {
+        endGame();
     }
 
     // check if touching ground and handle collisions
-    this.game.physics.arcade.collide(player, layer0, (sprite, tile) => {
+    this.game.physics.arcade.collide(player, layer1, (sprite, tile) => {
         if (sprite.body.onFloor()) {
             touchingGround = true;
         }
@@ -315,10 +311,7 @@ function gameUpdate() {
     }); //check line 114
     glucoseText.setText(glucoseTextPrefix + bloodSugar);
 
-    //updating arrow position
-    //arrow.x+=INCHING; //try to find a better way of doing this less;
-    arrow.x = game.camera.x + bloodSugar * 3.6;
-
+    // Moves the clouds based on camera movement
     var delta = game.camera.x - skyPrevX;
     skyPrevX = game.camera.x;
     sky0.tilePosition.x -= delta * 0.2 * 0.2;
