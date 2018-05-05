@@ -15,10 +15,16 @@ function gamePreload() {
 
     // Loading Images
     game.load.image("tiles", "assets/tiles.png");
-    game.load.image("player", "assets/player.png");
+    game.load.image("player", "assets/player0.png");
     game.load.image("juicebox", "assets/juice.png"); //at
     game.load.image("healthbar", "assets/healthBar.png");
     game.load.image("arrow", "assets/arrow.png");
+
+    game.load.image("sky0", "assets/sky0.png");
+    game.load.image("sky1", "assets/sky1.png");
+    game.load.image("sky2", "assets/sky2.png");
+    game.load.image("sky3", "assets/sky3.png");
+    game.load.image("sky4", "assets/sky4.png");
 
 
     /* // Spritesheet loading example
@@ -48,15 +54,38 @@ const BLOCK_HEIGHT = 32;
 const glucoseBarX = 50;
 const glucoseBarY = 32;
 
+var sky0;
+var sky1;
+var sky2;
+var sky3;
+var sky4;
+
 // Create game objects
 function gameCreate() {
     game.physics.startSystem(Phaser.Physics.ARCADE); // Initializes the physics engine
     game.physics.arcade.gravity.y = 1800; // Uses imaginary units
-    game.stage.backgroundColor = "#00CCEE"; // Colour hex code
+    game.stage.backgroundColor = "#81DAEA"; // Colour hex code
 
     // good example of loading a player animation spritesheet
     // https://phaser.io/tutorials/making-your-first-phaser-3-game/part5
 
+    const skyScale = 600 / 220;
+
+    sky0 = game.add.tileSprite(0, 0, WIDTH / skyScale, HEIGHT / skyScale, "sky0");
+    sky0.scale.setTo(skyScale, skyScale);
+    sky0.fixedToCamera = true;
+    sky1 = game.add.tileSprite(0, 0, WIDTH / skyScale, HEIGHT / skyScale, "sky1");
+    sky1.scale.setTo(skyScale, skyScale);
+    sky1.fixedToCamera = true;
+    sky2 = game.add.tileSprite(0, 0, WIDTH / skyScale, HEIGHT / skyScale, "sky2");
+    sky2.scale.setTo(skyScale, skyScale);
+    sky2.fixedToCamera = true;
+    sky3 = game.add.tileSprite(0, 0, WIDTH / skyScale, HEIGHT / skyScale, "sky3");
+    sky3.scale.setTo(skyScale, skyScale);
+    sky3.fixedToCamera = true;
+    sky4 = game.add.tileSprite(0, 0, WIDTH / skyScale, HEIGHT / skyScale, "sky4");
+    sky4.scale.setTo(skyScale, skyScale);
+    sky4.fixedToCamera = true;
 
     // binds the UP arrow key to the jump function
     jumpKey = game.input.keyboard.addKey(Phaser.Keyboard.UP);
@@ -281,7 +310,18 @@ function gameUpdate() {
         changeBloodSugar(10);
     }); //check line 114
     glucoseText.setText(glucoseTextPrefix + bloodSugar);
+
+
+    var delta = game.camera.x - skyPrevX;
+    skyPrevX = game.camera.x;
+    sky0.tilePosition.x -= delta * 0.2 * 0.2;
+    sky1.tilePosition.x -= delta * 0.3 * 0.3;
+    sky2.tilePosition.x -= delta * 0.4 * 0.4;
+    sky3.tilePosition.x -= delta * 0.5 * 0.5;
+    sky4.tilePosition.x -= delta * 0.6 * 0.6;
 }
+
+var skyPrevX = 0;
 
 function endGame() {
 
