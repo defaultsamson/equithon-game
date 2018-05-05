@@ -60,6 +60,19 @@ var sky2;
 var sky3;
 var sky4;
 
+
+    //spawn juice boxes
+function juiceSpawn() {
+    //for (i=0; i<3; i++){
+        juicebox = game.add.sprite(game.rnd.integerInRange(0,800), game.rnd.integerInRange(0,600), "juicebox"); //at help random spawning...
+        juicebox.scale.setTo(0.5, 0.5);
+        game.physics.enable(juicebox); //gives juicebox sprite a physics body at
+        juicebox.body.allowGravity = false;
+        juicebox.body.immovable = true;
+    
+    //}
+}
+
 // Create game objects
 function gameCreate() {
     game.physics.startSystem(Phaser.Physics.ARCADE); // Initializes the physics engine
@@ -260,6 +273,7 @@ function changeBloodSugar(degOfChange) {
     
     juicebox.destroy();
     console.log(bloodSugar)
+    juiceSpawn();
 }
 
 //check over code; how to randomly spawn juiceboxes; way to show metre in a fixed number;
@@ -304,6 +318,11 @@ function gameUpdate() {
             touchingGround = true;
         }
     });
+    
+    //spawn juice boxes
+    function spawnJuice(){
+        
+    }
 
     //at - if collision happens between player and juicebox
     this.game.physics.arcade.collide(player, juicebox, () => {
@@ -320,7 +339,11 @@ function gameUpdate() {
     sky3.tilePosition.x -= delta * 0.5 * 0.5;
     sky4.tilePosition.x -= delta * 0.6 * 0.6;
     
-    arrow.x=game.camera.x+bloodSugar*3.6;
+    arrow.x=game.camera.x+bloodSugar*3.6; //fixing arrow motion
+    
+   // if (juicebox.x<2){
+     //   juiceSpawn();
+    //}
 
 }
 
