@@ -5,16 +5,16 @@ var ingame = {
 }
 
 var player;
-var cameraBound;
 
 // Load resources
 function gamePreload() {
     // Loading tilemaps
-    game.load.tilemap("start", "assets/start.json", null, Phaser.Tilemap.TILED_JSON)
+    //game.load.tilemap("start", "assets/start.json", null, Phaser.Tilemap.TILED_JSON)
+    game.load.json("start", "assets/start.json");
 
     // Loading Images
-    game.load.image("tiles", "assets/tiles.png")
-    game.load.image("player", "assets/player.png")
+    game.load.image("tiles", "assets/tiles.png");
+    game.load.image("player", "assets/player.png");
 
     /* // Spritesheet loading example
     this.load.spritesheet('dude', 
@@ -25,6 +25,7 @@ function gamePreload() {
 }
 
 var map;
+var layer0;
 
 var rightKey;
 var leftKey;
@@ -47,32 +48,20 @@ function gameCreate() {
 
     map = game.add.tilemap(); // Creates a blank tilemap
     map.addTilesetImage("tiles");
+    map.setCollisionBetween(0, 999);
 
     const worldWidth = 400;
     const worldHeight = 19;
     const blockWidth = 32;
     const blockHeight = 32;
 
-    // Don't know why we need this layer, but it makes the blank layers suddenly work
-    var layer0 = map.create("Layer0", worldWidth, worldHeight, blockWidth, blockHeight)
+    layer0 = map.create("layer0", worldWidth, worldHeight, blockWidth, blockHeight)
     layer0.resizeWorld();
-    
-    // Last two #'s define the offset of the layer
-    var layer1 = map.createBlankLayer("Layer1", worldWidth, worldHeight, blockWidth, blockHeight);
-    // TODO? layer1.resizeWorld(); // make sure that the player doesn't fall out of the world
 
-    // index, x, y
-    map.putTile(0, 0, 0, layer1);
-    map.putTile(1, 4, 4, layer1);
-    map.putTile(2, 4, 19, layer1);
-    
-    //addMap(start, startWidth, startHeight);
-    
-    //var tmAdd = game.add.tilemap("start");
-    //tmAdd.addTilesetImage("tiles");
+    addMap("start")
 
     player = game.add.sprite(40, 40, "player");
-    game.physics.arcade.enable(player); // Gives player a physics body
+    game.physics.enable(player); // Gives player a physics body
     player.body.bounce.x = 0.05; // Slightly bouncy off wall
     player.body.collideWorldBounds = true; // Collide with the 
 
@@ -90,32 +79,36 @@ function gameCreate() {
 
 var xOffset = 0;
 
-function addMap(toAdd, yoffset) {
-    //var tmAdd = game.add.tilemap(toAdd, 32, 32, 30, 19);
-    //tmAdd.addTilesetImage("tiles");
-    
-    /*
-    for (var x = 0; x < tmAdd.width; x++) {
-        for (var y = 0; y < tmAdd.height; y++) {
-            map.putTile(tmAdd.getTile(x, y), x, y)
+function addMap(toAdd) {
+
+    var taMap = game.cache.getJSON("start");
+    var data = taMap.layers[0].data;
+    var width = taMap.layers[0].width;
+    var height = taMap.layers[0].height;
+
+
+    for (var x = 0; x < width; x++) {
+        for (var y = 0; y < height; y++) {
+            map.putTile(data[x + width * y] - 1, x + xOffset, y)
         }
-    }*/
-    //xOffset += tmAdd.width;
-    
-    //game.scene.removeChild(toAdd);
+    }
+
+    xOffset += width
 }
 
 function jump() {
     player.body.velocity.y = -800;
 }
 
+const INCHING = 0.5
 var cameraOff = 0
 
 // Update game objects
 function gameUpdate() {
     // Makes the camera move to the left when the player pushes the viewport forward
-    cameraOff = Math.max(cameraOff, player.x + 16 - (WIDTH / 2));
+    cameraOff = Math.max(cameraOff + INCHING, player.x + 16 - (2 * WIDTH / 3));
     game.camera.x = cameraOff;
+
 
     // Maps controls to velocity
     if (rightKey.isDown) {
@@ -133,8 +126,8 @@ function gameUpdate() {
     } else if (player.x < cameraOff) {
         player.x = cameraOff;
     }
-}
 
-const startWidth = 20;
-const startHeight = 19;
-const start = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2];
+    this.game.physics.arcade.collide(player, layer0);
+
+    game.debug.body(player)
+}
