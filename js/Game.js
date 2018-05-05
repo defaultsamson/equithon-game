@@ -53,6 +53,8 @@ const BLOCK_HEIGHT = 32;
 
 const glucoseBarX = 50;
 const glucoseBarY = 32;
+const energyMove = 0.0625;
+const energyJump = 0.5;
 
 var sky0;
 var sky1;
@@ -118,6 +120,7 @@ function gameCreate() {
     juicebox.body.immovable = true;
 
     arrow = game.add.sprite(400, 0, "arrow"); //pointer on health bar
+    arrow.fixedToCamera = true;
 
     glucoseBar = game.add.sprite(glucoseBarX, glucoseBarY, "healthbar");
     glucoseBar.fixedToCamera = true;
@@ -143,7 +146,7 @@ function gameCreate() {
 }
 
 var xOffset = 0;
-var bloodSugar = 90; //at to keep track of bloodsugar on metre
+var bloodSugar = 100; //at to keep track of bloodsugar on meter
 
 const DIRT_INDEX = 1;
 
@@ -246,6 +249,7 @@ function getYOffset(data, width, height) {
 function jump() {
     touchingGround = false;
     player.body.velocity.y = -800;
+    bloodSugar -= energyJump;
 }
 
 const CAMERA_SPEED = 0.5
@@ -254,16 +258,27 @@ var touchingGround = false;
 
 function changeBloodSugar(degOfChange) {
     bloodSugar += degOfChange;
-    arrow.x += 10;
     juicebox.destroy();
     console.log(bloodSugar)
 }
 
+function _mapArrow(sugar) {
+    // Old: (sugar - min) * (right side of health bar - left side of health bar) / (highest blood sugar - lowest blood sugar)
+    // return (sugar - 40) * (750 - 50) / (240 - 40);
+
+    // http://www.wolframalpha.com/input/?i=parabola+%7B(40,+0),(240,+700),(100,+350)%7D
+    return -1 / 60 * sugar * sugar + 49 / 6 * sugar - 300
+    
+}
+
+function renderArrow() {
+    // health bar is 0-700 pixels, want 40-240
+    arrow.cameraOffset.x = _mapArrow(bloodSugar);
+}
 //check over code; how to randomly spawn juiceboxes; way to show metre in a fixed number;
 
 
 var vibrateTicks = 0;
-var up = false;
 
 // Update game objects
 function gameUpdate() {
@@ -276,10 +291,10 @@ function gameUpdate() {
         player.body.velocity.x = 0;
     } else if (rightKey.isDown) {
         player.body.velocity.x = 300;
-        arrow.x -= 1;
+        bloodSugar -= energyMove;
     } else if (leftKey.isDown) {
         player.body.velocity.x = -300;
-        arrow.x -= 1;
+        bloodSugar -= energyMove;
     } else {
         player.body.velocity.x *= 0.75;
     }
@@ -299,18 +314,23 @@ function gameUpdate() {
     }
 
     // check if touching ground and handle collisions
-    this.game.physics.arcade.collide(player, layer0, (sprite, tile) => {
-        if (sprite.body.onFloor()) {
-            touchingGround = true;
-        }
-    });
+    this.game.physics.arcade.collide(player, layer0);
+    if (player.body.onFloor()) {
+        touchingGround = true;
+    }
+    else {
+        touchingGround = false;
+    }
 
     //at - if collision happens between player and juicebox
     this.game.physics.arcade.collide(player, juicebox, () => {
-        changeBloodSugar(10);
+        changeBloodSugar(30);
     }); //check line 114
-    glucoseText.setText(glucoseTextPrefix + bloodSugar);
+    glucoseText.setText(glucoseTextPrefix + Math.round(bloodSugar * 1000) / 1000);
 
+    renderArrow();
+
+    bloodSugar -= 1 / (2 ** 10);
 
     var delta = game.camera.x - skyPrevX;
     skyPrevX = game.camera.x;
