@@ -32,6 +32,7 @@ var layer0;
 
 var rightKey;
 var leftKey;
+var jumpKey;
 
 const worldWidth = 400;
 const worldHeight = 19;
@@ -48,8 +49,8 @@ function gameCreate() {
     // https://phaser.io/tutorials/making-your-first-phaser-3-game/part5
 
     // binds the UP arrow key to the jump function
-    var jumpKey = game.input.keyboard.addKey(Phaser.Keyboard.UP);
-    jumpKey.onDown.add(jump, this);
+    jumpKey = game.input.keyboard.addKey(Phaser.Keyboard.UP);
+    // jumpKey.onDown.add(jump, this);
 
     rightKey = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
     leftKey = game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
@@ -132,11 +133,13 @@ function getYOffset(data, width, height) {
 }
 
 function jump() {
+    touchingGround = false;
     player.body.velocity.y = -800;
 }
 
 const INCHING = 0.5
 var cameraOff = 0
+var touchingGround = false;
 
 function changeBloodSugar(degOfChange) {
     bloodSugar += degOfChange;
@@ -156,12 +159,20 @@ function gameUpdate() {
     game.camera.x = cameraOff;
 
     // Maps controls to velocity
-    if (rightKey.isDown) {
+    if (rightKey.isDown && leftKey.isDown) {
+        player.body.velocity.x = 0;
+    } else if (rightKey.isDown) {
         player.body.velocity.x = 300;
     } else if (leftKey.isDown) {
         player.body.velocity.x = -300;
     } else {
-        player.body.velocity.x = 0;
+        player.body.velocity.x *= 0.75;
+    }
+
+    // Jump controls
+    if (touchingGround && jumpKey.isDown) {
+        jump();
+        --player.y;
     }
 
     // Prevents the player from going far left
@@ -172,7 +183,7 @@ function gameUpdate() {
         player.x = cameraOff;
     }
 
-    this.game.physics.arcade.collide(player, layer0);
+    this.game.physics.arcade.collide(player, layer0, () => {touchingGround = true;});
 
     //at - if collision happens between player and juicebox
     this.game.physics.arcade.collide(player, juicebox, changeBloodSugar(10)); //check line 114
