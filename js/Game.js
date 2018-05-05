@@ -15,9 +15,11 @@ function gamePreload() {
 
     // Loading Images
     game.load.image("tiles", "assets/tiles.png");
-    game.load.image("player", "assets/player.png");
+    game.load.image("player", "assets/circular belgua.png");
 
     game.load.image("juicebox", "assets/juice.png"); //at
+
+    game.load.image("healthbar", "assets/healthBar.png");
 
     /* // Spritesheet loading example
     this.load.spritesheet('dude', 
@@ -33,6 +35,8 @@ var layer0;
 var rightKey;
 var leftKey;
 var jumpKey;
+
+var glucoseBar;
 
 const worldWidth = 400;
 const worldHeight = 19;
@@ -75,7 +79,13 @@ function gameCreate() {
 
     juicebox = game.add.sprite(100, 100, "juicebox"); //at help random spawning...
     game.physics.enable(juicebox); //gives juicebox sprite a physics body at
-    juicebox.body.allowGravity = false
+    juicebox.body.allowGravity = false;
+    juicebox.body.immovable = true;
+
+    glucoseBar = game.add.sprite(0, 0, "healthbar")
+    glucoseBar.fixedToCamera = true;
+    glucoseBar.width = 800;
+    glucoseBar.length = 32;
     
     // TODO
     //game.camera.follow(player)
