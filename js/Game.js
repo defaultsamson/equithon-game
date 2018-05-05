@@ -116,17 +116,10 @@ function gameCreate() {
     game.physics.enable(juicebox); //gives juicebox sprite a physics body at
     juicebox.body.allowGravity = false;
     juicebox.body.immovable = true;
-<<<<<<< HEAD
-    
-    arrow=game.add.sprite(400, 0, "arrow"); //pointer on health bar
-    
-    glucoseBar = game.add.sprite(glucoseBarX, glucoseBarY, "healthbar")
-=======
 
     arrow = game.add.sprite(400, 0, "arrow"); //pointer on health bar
 
-    glucoseBar = game.add.sprite(glucoseBarX, glucoseBarY, "healthbar");
->>>>>>> e3d9486c1941f326bfe9a3f725f723844ecf5762
+    glucoseBar = game.add.sprite(glucoseBarX, glucoseBarY, "healthbar")
     glucoseBar.fixedToCamera = true;
     glucoseBar.width = 700;
     glucoseBar.height = 20;
@@ -261,10 +254,7 @@ var touchingGround = false;
 
 function changeBloodSugar(degOfChange) {
     bloodSugar += degOfChange;
-<<<<<<< HEAD
-=======
     arrow.x += 10;
->>>>>>> e3d9486c1941f326bfe9a3f725f723844ecf5762
     juicebox.destroy();
     console.log(bloodSugar)
 }
@@ -286,17 +276,14 @@ function gameUpdate() {
         player.body.velocity.x = 0;
     } else if (rightKey.isDown) {
         player.body.velocity.x = 300;
-<<<<<<< HEAD
-        bloodSugar-=0.25; 
+        bloodSugar -= 0.25;
     } else if (leftKey.isDown) {
         player.body.velocity.x = -300;
-        bloodSugar-=0.25;
-=======
+        bloodSugar -= 0.25;
         arrow.x -= 1;
     } else if (leftKey.isDown) {
         player.body.velocity.x = -300;
         arrow.x -= 1;
->>>>>>> e3d9486c1941f326bfe9a3f725f723844ecf5762
     } else {
         player.body.velocity.x *= 0.75;
     }
@@ -327,14 +314,10 @@ function gameUpdate() {
         changeBloodSugar(10);
     }); //check line 114
     glucoseText.setText(glucoseTextPrefix + bloodSugar);
-<<<<<<< HEAD
-    
-    
+
     //updating arrow position
     //arrow.x+=INCHING; //try to find a better way of doing this less;
-    arrow.x=game.camera.x+bloodSugar*3.6;
-=======
-
+    arrow.x = game.camera.x + bloodSugar * 3.6;
 
     var delta = game.camera.x - skyPrevX;
     skyPrevX = game.camera.x;
@@ -343,7 +326,6 @@ function gameUpdate() {
     sky2.tilePosition.x -= delta * 0.4 * 0.4;
     sky3.tilePosition.x -= delta * 0.5 * 0.5;
     sky4.tilePosition.x -= delta * 0.6 * 0.6;
->>>>>>> e3d9486c1941f326bfe9a3f725f723844ecf5762
 }
 
 var skyPrevX = 0;
