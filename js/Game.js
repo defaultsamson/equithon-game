@@ -92,6 +92,8 @@ function gameCreate() {
 var xOffset = 0;
 var bloodSugar = 90; //at to keep track of bloodsugar on metre
 
+const DIRT_INDEX = 1;
+
 function addMap(toAdd) {
 
     var taMap = game.cache.getJSON(toAdd);
@@ -101,9 +103,66 @@ function addMap(toAdd) {
 
     var yOffset = getYOffset(data, width, height);
 
+    var solidLayer = true;
+
     for (var x = 0; x < width; x++) {
-        for (var y = 0; y < height; y++) {
-            map.putTile(data[x + width * y] - 1, x + xOffset, y + yOffset);
+
+        if (!solidLayer) {
+            for (var y = 0; y < height; y++) {
+                map.putTile(data[x + width * y] - 1, x + xOffset, y + yOffset);
+            }
+        } else {
+            var y = 0;
+            var yCoord;
+            while ((yCoord = y + yOffset) < worldHeight) {
+                var index = x + width * y;
+                // if the index is within the range of the array
+                if (index < width * height) {
+                    var id = data[x + width * y] - 1;
+                    if (id >= 0) {
+                        // Tile contains something, use it
+                        map.putTile(id, x + xOffset, yCoord);
+                    } else {
+                        // Tile is empty
+                        // Check if all the other blocks in this column are empty
+                        var empty = true; // Assume that they are
+                        var y2 = y + 1; // start searching from the next block
+                        var yCoord2;
+                        while ((yCoord2 = y2 + yOffset) < worldHeight) {
+                            var index2 = x + width * y2;
+                            if (index2 < width * height) {
+                                var id2 = data[x + width * y2] - 1;
+                                if (id2 >= 0) {
+                                    // Tile contains something
+                                    empty = false;
+                                    break;
+                                }
+                            } else {
+                                // below the file
+                                break;
+                            }
+
+                            y2++;
+                        }
+
+                        if (empty) {
+                            var y3 = y;
+                            var yCoord3;
+                            // replace all the following blocks with dirt
+                            while ((yCoord3 = y3 + yOffset) < worldHeight) {
+                                map.putTile(DIRT_INDEX, x + xOffset, yCoord3);
+                                y3++;
+                            }
+                            break;
+                        } // Otherwise continue down the column
+                    }
+                } else {
+                    // below the file, fill with dirty things
+                    map.putTile(DIRT_INDEX, x + xOffset, yCoord);
+                }
+
+                y++;
+            }
         }
     }
 
