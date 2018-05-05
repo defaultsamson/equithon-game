@@ -190,7 +190,7 @@ function gameUpdate() {
                                                                     });
 
     //at - if collision happens between player and juicebox
-    this.game.physics.arcade.collide(player, juicebox, changeBloodSugar(10)); //check line 114
+    this.game.physics.arcade.collide(player, juicebox, () => {changeBloodSugar(10)}); //check line 114
 }
 
 function endGame() {
