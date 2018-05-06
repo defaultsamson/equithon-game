@@ -21,6 +21,7 @@ var glucoseBar;
 var glucoseTextPrefix = "Glucose Level (mg/dL): ";
 var glucoseText;
 
+var goose; 
 var sky0;
 var sky1;
 var sky2;
@@ -37,13 +38,19 @@ function gamePreload() {
     //game.load.tilemap("start", "assets/start.json", null, Phaser.Tilemap.TILED_JSON)
     game.load.json("start", "assets/start.json");
     game.load.json("ruins", "assets/ruins.json");
+    game.load.json("test1", "assets/test1.json");
+    game.load.json("test2", "assets/test2.json");
+    game.load.json("test3", "assets/test3.json");
+    game.load.json("test4", "assets/test4.json");
+    game.load.json("test5", "assets/test5.json");
+    game.load.json("test6", "assets/test6.json");
 
     // Loading Images
     game.load.image("tiles", "assets/tiles.png");
-    //game.load.image("player", "assets/player0.png");
     game.load.image("juicebox", "assets/juice.png"); //at
     game.load.image("healthbar", "assets/healthBar.png");
     game.load.image("arrow", "assets/arrow.png");
+    game.load.image("goose", "assets/goosesprite.png");
 
     game.load.image("sky0", "assets/sky0.png");
     game.load.image("sky1", "assets/sky1.png");
@@ -53,6 +60,7 @@ function gamePreload() {
 
     // 105 by 133 images, 2 frames
     game.load.spritesheet("player", "assets/player.png", 105, 133, 2);
+    game.load.spritesheet("goose", "assets/goosesprite.png", 440, 580, 2); 
 
     /* // Spritesheet loading example
     this.load.spritesheet('dude',
@@ -110,12 +118,26 @@ function gameCreate() {
     game.physics.arcade.enable(layer1);
 
     map.setCollision(COLLISION_IDS, true, layer1);
-
     addMap("start");
     addMap("ruins");
+    addMap("test1");
+    addMap("test2");
+    addMap("test3");
+    addMap("test4");
+    addMap("test5");
+    addMap("test6");
+    addMap("test4");
+    addMap("test2");
+    addMap("test2");
+    addMap("test2");
+    addMap("test2");
     addMap("ruins");
+    addMap("ruins");
+    addMap("ruins");
+    
+    spawnJuice();
 
-    player = game.add.sprite(40, 40, "player");
+    player = game.add.sprite(200, 40, "player");
     player.scale.setTo(PLAYER_SCALE, PLAYER_SCALE);
     game.physics.enable(player); // Gives player a physics body
     player.body.bounce.x = 0.05;
@@ -128,6 +150,15 @@ function gameCreate() {
     glucoseBar.fixedToCamera = true;
     glucoseBar.width = 700;
     glucoseBar.height = 20;
+
+    arrow = game.add.sprite(400, 0, "arrow"); //pointer on health bar
+    arrow.fixedToCamera = true;
+
+    goose = game.add.sprite(WIDTH/2, 200, "goose"); 
+    goose.scale.setTo(0.1, 0.1); 
+    game.physics.enable(goose); 
+    goose.body.allowGravity = false; 
+    goose.body.immovable = true; 
 
     var textStyle = {
         'font': "16pt Comic Sans MS"
@@ -200,14 +231,16 @@ function juiceRespawn() {
 
 // Update game objects
 function gameUpdate() {
+
     // Makes the camera move to the left when the player pushes the viewport forward
     cameraOff = Math.max(cameraOff + CAMERA_SPEED, player.x + 16 - (2 * WIDTH / 3));
     game.camera.x = cameraOff;
 
-    updateControls()
+    updateControls();
 
+    // TODO test this shit, it's messed
     // End game if player falls off screen
-    if (player.x < 1 || player.y > 399) {
+    if (player.x + 16 < game.camera.x) {
         endGame();
     }
 
@@ -232,6 +265,7 @@ function gameUpdate() {
     if (DEBUG) {
         updatePlayerText();
     }
+    moveSky();
 }
 
 //fixing arrow motion
