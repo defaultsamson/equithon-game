@@ -197,11 +197,11 @@ function gameCreate() {
     loseText.visible = false;
 
     var textStyle = {
-        font: "26pt Verdana",
+        font: "22pt Verdana",
         fill: "white",
         align: "center"
     };
-    continueText = game.add.text(118, 500, "Press Space or Enter to continue", textStyle);
+    continueText = game.add.text(150, 230, "Press Space or Enter to continue", textStyle);
     continueText.fixedToCamera = true;
     continueText.visible = false;
 
