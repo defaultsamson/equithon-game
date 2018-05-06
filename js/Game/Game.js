@@ -111,12 +111,11 @@ function gameCreate() {
     layer1.resizeWorld();
 
     map.setCollision(COLLISION_IDS, true, layer1);
-
     addMap("start");
     addMap("ruins");
     addMap("ruins");
 
-    player = game.add.sprite(40, 40, "player");
+    player = game.add.sprite(200, 40, "player");
     player.scale.setTo(PLAYER_SCALE, PLAYER_SCALE);
     game.physics.enable(player); // Gives player a physics body
     player.body.bounce.x = 0.05; // Slightly bouncy off wall
@@ -164,8 +163,9 @@ function gameUpdate() {
 
     updateControls()
 
+    // TODO test this shit, it's messed
     // End game if player falls off screen
-    if (player.x < 1 || player.y > 399) {
+    if (player.x + 16 < game.camera.x) {
         endGame();
     }
 
