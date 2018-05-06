@@ -1,20 +1,7 @@
 var bloodSugar = 100; //at to keep track of bloodsugar on meter
 
 function changeBloodSugar(degOfChange) {
-
-    if (bloodSugar + degOfChange < 40) {
-        bloodSugar = 0;
-        console.log("Game Over");
-        endGame();
-    }
-    else if (bloodSugar + degOfChange > 240) {
-      bloodSugar = 1000;
-      console.log("Game Over");
-      endGame();
-    }
-    else {
-        bloodSugar += degOfChange;
-    }
+    bloodSugar += degOfChange;
 }
 
 function _mapArrow(sugar) {
@@ -22,12 +9,13 @@ function _mapArrow(sugar) {
     // return (sugar - 40) * (750 - 50) / (240 - 40);
 
     // http://www.wolframalpha.com/input/?i=parabola+%7B(40,+0),(240,+700),(100,+350)%7D
-    return -1 / 60 * sugar * sugar + 49 / 6 * sugar - 300;
+    //return -1 / 60 * sugar * sugar + 49 / 6 * sugar - 300;
+    return -(17 * sugar**2)/1050 + (119 *sugar)/15 - 1970/7
 }
 
 function renderArrow() {
     // health bar is 0-700 pixels, want 40-240
-    arrow.cameraOffset.x = _mapArrow(bloodSugar);
+    arrow.cameraOffset.x = _mapArrow(bloodSugar) + 35;
 }
 
 function updateSugar() {
@@ -44,7 +32,11 @@ function updateSugar() {
 
     bloodSugar -= 1 / (2 ** 10);
 
-    arrow.x = game.camera.x + bloodSugar * 3.6; //fixing arrow motion
+    if (bloodSugar < 40 || bloodSugar > 240) {
+        endGame();
+    }
+
+    //arrow.x = game.camera.x + bloodSugar * 3.6; //fixing arrow motion
 }
 
 var juices = [];
