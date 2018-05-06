@@ -240,7 +240,7 @@ function gameCreate() {
     loseText.fixedToCamera = true;
     loseText.visible = false;
     
-    winText = game.add.text(80,100, "Congratulations! \n You got home with \nyour sugar balanced.", winStyle);
+    winText = game.add.text(130,100, "Congratulations! \n You got to school with \nyour sugar balanced.", winStyle);
     winText.fixedToCamera=true;
     winText.visible=false; 
 
@@ -346,6 +346,7 @@ function restartGame() {
         respawnPlayer = 6;
         loseText.visible = false;
         continueText.visible = false;
+        spawnJuice();
     }
 }
 
