@@ -15,6 +15,7 @@ function gamePreload() {
 
     // Loading Images
     game.load.image("tiles", "assets/tiles.png");
+    game.load.image("player", "assets/player0.png");
     game.load.image("juicebox", "assets/juice.png"); //at
     game.load.image("healthbar", "assets/healthBar.png");
     game.load.image("arrow", "assets/arrow.png");
@@ -24,9 +25,7 @@ function gamePreload() {
     game.load.image("sky2", "assets/sky2.png");
     game.load.image("sky3", "assets/sky3.png");
     game.load.image("sky4", "assets/sky4.png");
-    
-    // 105 by 133 images, 2 frames
-    game.load.spritesheet("player", "assets/player.png", 105, 133, 2);
+
 
     /* // Spritesheet loading example
     this.load.spritesheet('dude',
@@ -63,7 +62,6 @@ var sky2;
 var sky3;
 var sky4;
 
-const PLAYER_SCALE = 0.3;
 
     //spawn juice boxes
 function juiceSpawn() {
@@ -126,12 +124,10 @@ function gameCreate() {
     addMap("ruins");
 
     player = game.add.sprite(40, 40, "player");
-    player.scale.setTo(PLAYER_SCALE, PLAYER_SCALE);
+    player.scale.setTo(0.25, 0.25);
     game.physics.enable(player); // Gives player a physics body
     player.body.bounce.x = 0.05; // Slightly bouncy off wall
     player.body.collideWorldBounds = true; // Collide with the
-    player.animations.add('walk', [0, 1], 4, true);
-    player.anchor.setTo(0.5, 0.5);
 
     juicebox = game.add.sprite(500, 200, "juicebox"); //at help random spawning...
     juicebox.scale.setTo(0.5, 0.5);
@@ -277,11 +273,20 @@ var cameraOff = 0
 var touchingGround = false;
 
 function changeBloodSugar(degOfChange) {
+
+    if (bloodSugar + degOfChange < 40) {
+        bloodSugar = 0;
+        console.log("Game Over");
+        endGame(); 
+    }
+
+    else {
     bloodSugar += degOfChange;
-    
     juicebox.destroy();
     console.log(bloodSugar)
     juiceSpawn();
+    }
+
 }
 
 function _mapArrow(sugar) {
@@ -289,7 +294,7 @@ function _mapArrow(sugar) {
     // return (sugar - 40) * (750 - 50) / (240 - 40);
 
     // http://www.wolframalpha.com/input/?i=parabola+%7B(40,+0),(240,+700),(100,+350)%7D
-    return -1 / 60 * sugar * sugar + 49 / 6 * sugar - 300
+    return -1 / 60 * sugar * sugar + 49 / 6 * sugar - 300;
     
 }
 
@@ -311,24 +316,14 @@ function gameUpdate() {
     // Maps controls to velocity
     if (rightKey.isDown && leftKey.isDown) {
         player.body.velocity.x = 0;
-        player.animations.stop("walk");
-
     } else if (rightKey.isDown) {
         player.body.velocity.x = 300;
         bloodSugar -= energyMove;
-        player.animations.play("walk")
-        player.scale.x = PLAYER_SCALE;
-
     } else if (leftKey.isDown) {
         player.body.velocity.x = -300;
-        bloodSugar -= energyMove;        
-        player.scale.x = -PLAYER_SCALE;
-        player.animations.play("walk")
-
+        bloodSugar -= energyMove;
     } else {
         player.body.velocity.x *= 0.75;
-        player.animations.stop("walk");
-
     }
 
     // Jump controls
@@ -338,7 +333,7 @@ function gameUpdate() {
     }
 
     // End game if player falls off screen
-    if (player.x < 1 || player.y>399) {
+    if (player.x < 1 || player.y > 399) {
         endGame();
     }
 
