@@ -137,6 +137,8 @@ function gameCreate() {
 
     arrow = game.add.sprite(400, 30, "arrow"); //pointer on health bar
     arrow.fixedToCamera = true;
+    arrow.width = 20;
+    arrow.height = 40;
 
     juicebox = game.add.sprite(500, 200, "juicebox"); //at help random spawning...
     juicebox.scale.setTo(0.5, 0.5);
