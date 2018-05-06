@@ -110,7 +110,6 @@ function spawnJuice() {
 
         var juicebox = game.add.sprite(xOrd * BLOCK_WIDTH, yOrd * BLOCK_HEIGHT, "juicebox");
         juicebox.scale.setTo(0.34, 0.34);
-        juicebox.anchor.setTo(0, 0.3);
         game.physics.enable(juicebox);
         juicebox.body.allowGravity = false;
         juicebox.body.immovable = true;

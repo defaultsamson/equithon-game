@@ -58,18 +58,6 @@ function gamePreload() {
     */
 }
 
-//spawn juice boxes
-function juiceSpawn() {
-    //for (i=0; i<3; i++){
-    juicebox = game.add.sprite(game.rnd.integerInRange(0, 800), game.rnd.integerInRange(0, 600), "juicebox"); //at help random spawning...
-    juicebox.scale.setTo(0.5, 0.5);
-    game.physics.enable(juicebox); //gives juicebox sprite a physics body at
-    juicebox.body.allowGravity = false;
-    juicebox.body.immovable = true;
-
-    //}
-}
-
 // Create game objects
 function gameCreate() {
     game.physics.startSystem(Phaser.Physics.ARCADE); // Initializes the physics engine
@@ -125,6 +113,8 @@ function gameCreate() {
     addMap("ruins");
     addMap("ruins");
     addMap("ruins");
+    
+    spawnJuice();
 
     player = game.add.sprite(200, 40, "player");
     player.scale.setTo(PLAYER_SCALE, PLAYER_SCALE);
@@ -133,14 +123,6 @@ function gameCreate() {
     player.body.collideWorldBounds = true; // Collide with the
     player.animations.add('walk', [0, 1], 4, true);
     player.anchor.setTo(0.5, 0.5);
-
-    juicebox = game.add.sprite(500, 200, "juicebox"); //at help random spawning...
-    juicebox.scale.setTo(0.5, 0.5);
-    game.physics.enable(juicebox); //gives juicebox sprite a physics body at
-    juicebox.body.allowGravity = false;
-    juicebox.body.immovable = true;
-    arrow = game.add.sprite(400, 0, "arrow"); //pointer on health bar
-    arrow.fixedToCamera = true;
 
     glucoseBar = game.add.sprite(glucoseBarX, glucoseBarY, "healthbar");
     glucoseBar.fixedToCamera = true;
@@ -174,14 +156,8 @@ function gameCreate() {
     console.log("Ready!");
 }
 
-var dothe = true;
-
 // Update game objects
 function gameUpdate() {
-    if (dothe) {
-        dothe = false;
-        spawnJuice()
-    }
 
     // Makes the camera move to the left when the player pushes the viewport forward
     cameraOff = Math.max(cameraOff + CAMERA_SPEED, player.x + 16 - (2 * WIDTH / 3));
@@ -202,11 +178,6 @@ function gameUpdate() {
     } else {
         touchingGround = false;
     }
-
-    //at - if collision happens between player and juicebox
-    this.game.physics.arcade.collide(player, juicebox, () => {
-        changeBloodSugar(30);
-    }); //check line 114
 
     updateSugar();
     moveSky();
