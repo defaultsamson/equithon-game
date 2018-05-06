@@ -1,0 +1,18 @@
+var wonGame = {
+    preload: wonPreload,
+    create: wonCreate,
+    update: wonUpdate
+}
+
+function wonPreload() {
+    game.load.image("endJuice", "assets/juice.png");
+}
+function wonCreate() {
+    console.log("hi");
+}
+
+
+function wonUpdate() {
+    console.log("hi")
+}
+

@@ -28,10 +28,10 @@ function menuCreate() {
     skipButton.onDown.add(gotoIngame, this);
 
     var titleStyle = {
-        font: "100pt Verdana",
+        font: "80pt Verdana",
         fill: "white"
     };
-    titleText = game.add.text(120, 140, "Glucose", titleStyle);
+    titleText = game.add.text(50, 140, "Glucose Run", titleStyle);
     titleText.fixedToCamera = true;
 
     var textStyle = {
@@ -162,6 +162,7 @@ function continueMenu() {
             break;
         default:
             gotoIngame();
+            if (player.x>400) console.log("pasttt")
             break;
     }
 
@@ -171,6 +172,8 @@ function continueMenu() {
 function gotoIngame() {
     game.state.start("ingame");
 }
+
+
 
 function menuUpdate() {
     if (!stopFlashStart && Date.now() - flashStartTimer >= flashStart) {
