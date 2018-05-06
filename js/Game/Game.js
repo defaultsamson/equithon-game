@@ -35,7 +35,6 @@ function gamePreload() {
 
     // Loading Images
     game.load.image("tiles", "assets/tiles.png");
-    game.load.image("player", "assets/player0.png");
     game.load.image("juicebox", "assets/juice.png"); //at
     game.load.image("healthbar", "assets/healthBar.png");
     game.load.image("arrow", "assets/arrow.png");
@@ -117,6 +116,8 @@ function gameCreate() {
     addMap("start");
     addMap("ruins");
     addMap("ruins");
+    
+    spawnJuice()
 
     player = game.add.sprite(200, 40, "player");
     player.scale.setTo(PLAYER_SCALE, PLAYER_SCALE);
@@ -131,6 +132,8 @@ function gameCreate() {
     game.physics.enable(juicebox); //gives juicebox sprite a physics body at
     juicebox.body.allowGravity = false;
     juicebox.body.immovable = true;
+    arrow = game.add.sprite(400, 0, "arrow"); //pointer on health bar
+    arrow.fixedToCamera = true;
 
     glucoseBar = game.add.sprite(glucoseBarX, glucoseBarY, "healthbar");
     glucoseBar.fixedToCamera = true;
@@ -170,7 +173,7 @@ function gameUpdate() {
     cameraOff = Math.max(cameraOff + CAMERA_SPEED, player.x + 16 - (2 * WIDTH / 3));
     game.camera.x = cameraOff;
 
-    updateControls()
+    updateControls();
 
     // TODO test this shit, it's messed
     // End game if player falls off screen
@@ -192,7 +195,7 @@ function gameUpdate() {
     }); //check line 114
 
     updateSugar();
-
+    moveSky();
 }
 
 //fixing arrow motion
