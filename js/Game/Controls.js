@@ -22,7 +22,6 @@ function updateControls() {
 
     // Jump controls
     if (touchingGround && jumpKey.isDown) {
-        game.state.start("menu")
         jump();
         --player.y;
     }

@@ -34,7 +34,6 @@ function gamePreload() {
 
     // Loading Images
     game.load.image("tiles", "assets/tiles.png");
-    game.load.image("player", "assets/player0.png");
     game.load.image("juicebox", "assets/juice.png"); //at
     game.load.image("healthbar", "assets/healthBar.png");
     game.load.image("arrow", "assets/arrow.png");
@@ -114,6 +113,8 @@ function gameCreate() {
     addMap("start");
     addMap("ruins");
     addMap("ruins");
+    
+    spawnJuice()
 
     player = game.add.sprite(200, 40, "player");
     player.scale.setTo(PLAYER_SCALE, PLAYER_SCALE);
@@ -122,12 +123,6 @@ function gameCreate() {
     player.body.collideWorldBounds = true; // Collide with the
     player.animations.add('walk', [0, 1], 4, true);
     player.anchor.setTo(0.5, 0.5);
-
-    juicebox = game.add.sprite(500, 200, "juicebox"); //at help random spawning...
-    juicebox.scale.setTo(0.5, 0.5);
-    game.physics.enable(juicebox); //gives juicebox sprite a physics body at
-    juicebox.body.allowGravity = false;
-    juicebox.body.immovable = true;
 
     arrow = game.add.sprite(400, 0, "arrow"); //pointer on health bar
     arrow.fixedToCamera = true;
@@ -176,11 +171,6 @@ function gameUpdate() {
     } else {
         touchingGround = false;
     }
-
-    //at - if collision happens between player and juicebox
-    this.game.physics.arcade.collide(player, juicebox, () => {
-        changeBloodSugar(30);
-    }); //check line 114
 
     updateSugar()
 }
