@@ -348,7 +348,6 @@ function gameUpdate() {
 
 //spawn juice boxes
 function spawnJuice(){
-    
     this.game.physics.arcade.collide(player, layer1);
     if (player.body.onFloor()) {
         touchingGround = true;
