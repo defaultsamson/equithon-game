@@ -26,6 +26,8 @@ function gamePreload() {
     game.load.image("sky3", "assets/sky3.png");
     game.load.image("sky4", "assets/sky4.png");
 
+    // 105 by 133 images, 2 frames
+    game.load.spritesheet("player", "assets/player.png", 105, 133, 2);
 
     /* // Spritesheet loading example
     this.load.spritesheet('dude',
@@ -62,6 +64,7 @@ var sky2;
 var sky3;
 var sky4;
 
+const PLAYER_SCALE = 0.3;
 
     //spawn juice boxes
 function juiceSpawn() {
@@ -124,10 +127,12 @@ function gameCreate() {
     addMap("ruins");
 
     player = game.add.sprite(40, 40, "player");
-    player.scale.setTo(0.25, 0.25);
+    player.scale.setTo(PLAYER_SCALE, PLAYER_SCALE);
     game.physics.enable(player); // Gives player a physics body
     player.body.bounce.x = 0.05; // Slightly bouncy off wall
     player.body.collideWorldBounds = true; // Collide with the
+    player.animations.add('walk', [0, 1], 4, true);
+    player.anchor.setTo(0.5, 0.5);
 
     juicebox = game.add.sprite(500, 200, "juicebox"); //at help random spawning...
     juicebox.scale.setTo(0.5, 0.5);
@@ -316,14 +321,20 @@ function gameUpdate() {
     // Maps controls to velocity
     if (rightKey.isDown && leftKey.isDown) {
         player.body.velocity.x = 0;
+        player.animations.stop("walk");
     } else if (rightKey.isDown) {
         player.body.velocity.x = 300;
         bloodSugar -= energyMove;
+        player.animations.play("walk")
+        player.scale.x = PLAYER_SCALE;
     } else if (leftKey.isDown) {
         player.body.velocity.x = -300;
-        bloodSugar -= energyMove;
+        bloodSugar -= energyMove;       
+        player.scale.x = -PLAYER_SCALE;
+        player.animations.play("walk")
     } else {
         player.body.velocity.x *= 0.75;
+        player.animations.stop("walk");
     }
 
     // Jump controls
