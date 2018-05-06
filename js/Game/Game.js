@@ -124,9 +124,6 @@ function gameCreate() {
     player.animations.add('walk', [0, 1], 4, true);
     player.anchor.setTo(0.5, 0.5);
 
-    arrow = game.add.sprite(400, 0, "arrow"); //pointer on health bar
-    arrow.fixedToCamera = true;
-
     glucoseBar = game.add.sprite(glucoseBarX, glucoseBarY, "healthbar");
     glucoseBar.fixedToCamera = true;
     glucoseBar.width = 700;
@@ -137,6 +134,9 @@ function gameCreate() {
     }
     glucoseText = game.add.text(300, 0, glucoseTextPrefix, textStyle);
     glucoseText.fixedToCamera = true;
+
+    arrow = game.add.sprite(400, 30, "arrow"); //pointer on health bar
+    arrow.fixedToCamera = true;
 
     juicebox = game.add.sprite(500, 200, "juicebox"); //at help random spawning...
     juicebox.scale.setTo(0.5, 0.5);
