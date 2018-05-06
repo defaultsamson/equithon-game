@@ -297,7 +297,7 @@ function gameUpdate() {
             arrow.visible=false;
             
             console.log("omw to winning")
-            finish();        
+            //finish();        
         }
     }
 
