@@ -184,11 +184,13 @@ function gameCreate() {
     glucoseBar.width = 700;
     glucoseBar.height = 20;
 
-    goose = game.add.sprite(WIDTH / 2, 200, "goose");
+    goose = game.add.sprite(WIDTH, 200, "goose");
     goose.scale.setTo(0.1, 0.1);
     game.physics.enable(goose);
     goose.body.allowGravity = false;
-    goose.body.immovable = true;
+    goose.body.immovable = false;
+    goose.body.velocity.x = -100; 
+
 
     var textStyle = {
         font: "16pt Verdana"
