@@ -6,7 +6,13 @@ function changeBloodSugar(degOfChange) {
         bloodSugar = 0;
         console.log("Game Over");
         endGame();
-    } else {
+    }
+    else if (bloodSugar + degOfChange > 240) {
+      bloodSugar = 1000;
+      console.log("Game Over");
+      endGame();
+    }
+    else {
         bloodSugar += degOfChange;
     }
 }

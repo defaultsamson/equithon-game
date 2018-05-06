@@ -19,7 +19,7 @@ var glucoseBar;
 var glucoseTextPrefix = "Glucose Level (mg/dL): ";
 var glucoseText;
 
-var goose; 
+var goose;
 var sky0;
 var sky1;
 var sky2;
@@ -58,7 +58,7 @@ function gamePreload() {
 
     // 105 by 133 images, 2 frames
     game.load.spritesheet("player", "assets/player.png", 105, 133, 2);
-    game.load.spritesheet("goose", "assets/goosesprite.png", 440, 580, 2); 
+    game.load.spritesheet("goose", "assets/goosesprite.png", 440, 580, 2);
 
     /* // Spritesheet loading example
     this.load.spritesheet('dude',
@@ -134,7 +134,7 @@ function gameCreate() {
     addMap("ruins");
     addMap("ruins");*/
     generateRandomMap();
-    
+
     spawnJuice();
 
     player = game.add.sprite(200, 40, "player");
@@ -151,14 +151,14 @@ function gameCreate() {
     glucoseBar.width = 700;
     glucoseBar.height = 20;
 
-    goose = game.add.sprite(WIDTH/2, 200, "goose"); 
-    goose.scale.setTo(0.1, 0.1); 
-    game.physics.enable(goose); 
-    goose.body.allowGravity = false; 
-    goose.body.immovable = true; 
+    goose = game.add.sprite(WIDTH/2, 200, "goose");
+    goose.scale.setTo(0.1, 0.1);
+    game.physics.enable(goose);
+    goose.body.allowGravity = false;
+    goose.body.immovable = true;
 
     var textStyle = {
-        'font': "16pt Comic Sans MS"
+        'font': "16pt Verdana"
     }
     glucoseText = game.add.text(300, 0, glucoseTextPrefix, textStyle);
     glucoseText.fixedToCamera = true;
