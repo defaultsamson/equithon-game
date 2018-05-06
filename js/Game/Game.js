@@ -17,6 +17,7 @@ var glucoseBar;
 var glucoseTextPrefix = "Glucose Level (mg/dL): ";
 var glucoseText;
 
+var goose; 
 var sky0;
 var sky1;
 var sky2;
@@ -38,6 +39,7 @@ function gamePreload() {
     game.load.image("juicebox", "assets/juice.png"); //at
     game.load.image("healthbar", "assets/healthBar.png");
     game.load.image("arrow", "assets/arrow.png");
+    game.load.image("goose", "assets/goosesprite.png");
 
     game.load.image("sky0", "assets/sky0.png");
     game.load.image("sky1", "assets/sky1.png");
@@ -47,6 +49,7 @@ function gamePreload() {
 
     // 105 by 133 images, 2 frames
     game.load.spritesheet("player", "assets/player.png", 105, 133, 2);
+    game.load.spritesheet("goose", "assets/goosesprite.png", 440, 580, 2); 
 
     /* // Spritesheet loading example
     this.load.spritesheet('dude',
@@ -129,13 +132,19 @@ function gameCreate() {
     juicebox.body.allowGravity = false;
     juicebox.body.immovable = true;
 
-    arrow = game.add.sprite(400, 0, "arrow"); //pointer on health bar
-    arrow.fixedToCamera = true;
-
     glucoseBar = game.add.sprite(glucoseBarX, glucoseBarY, "healthbar");
     glucoseBar.fixedToCamera = true;
     glucoseBar.width = 700;
     glucoseBar.height = 20;
+
+    arrow = game.add.sprite(400, 0, "arrow"); //pointer on health bar
+    arrow.fixedToCamera = true;
+
+    goose = game.add.sprite(WIDTH/2, 200, "goose"); 
+    goose.scale.setTo(0.1, 0.1); 
+    game.physics.enable(goose); 
+    goose.body.allowGravity = false; 
+    goose.body.immovable = true; 
 
     var textStyle = {
         'font': "16pt Comic Sans MS"
@@ -182,7 +191,8 @@ function gameUpdate() {
         changeBloodSugar(30);
     }); //check line 114
 
-    updateSugar()
+    updateSugar();
+
 }
 
 //fixing arrow motion
