@@ -1,16 +1,28 @@
 var touchingGround = false;
 
+function jumpPressed() {
+    return wKey.isDown || spaceKey.isDown || iKey.isDown || upKey.isDown;
+}
+
+function rightPressed() {
+    return dKey.isDown || lKey.isDown || rightKey.isDown;
+}
+
+function leftPressed() {
+    return leftKey.isDown || aKey.isDown || jKey.isDown;
+}
+    
 function updateControls() {
     // Maps controls to velocity
-    if (rightKey.isDown && leftKey.isDown) {
+    if (rightPressed() && leftPressed()) {
         player.body.velocity.x = 0;
         player.animations.stop("walk");
-    } else if (rightKey.isDown) {
+    } else if (rightPressed()) {
         player.body.velocity.x = 300;
         bloodSugar -= energyMove;
         player.animations.play("walk")
         player.scale.x = PLAYER_SCALE;
-    } else if (leftKey.isDown) {
+    } else if (leftPressed()) {
         player.body.velocity.x = -300;
         bloodSugar -= energyMove;
         player.scale.x = -PLAYER_SCALE;
@@ -28,7 +40,7 @@ function updateControls() {
     }
 
     // Jump controls
-    if (touchingGround && jumpKey.isDown) {
+    if (touchingGround && jumpPressed()) {
         jump();
         --player.y;
     }

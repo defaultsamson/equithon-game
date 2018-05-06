@@ -10,11 +10,6 @@ var playerText;
 var map;
 var layer1;
 
-var rightKey;
-var leftKey;
-var jumpKey;
-var jetpackKey;
-
 var glucoseBar;
 var glucoseTextPrefix = "Glucose Level (mg/dL): ";
 var glucoseText;
@@ -101,16 +96,22 @@ function gameCreate() {
     sky4.scale.setTo(skyScale, skyScale);
     sky4.fixedToCamera = true;
 
-    // binds the UP arrow key to the jump function
-    jumpKey = game.input.keyboard.addKey(Phaser.Keyboard.UP);
-    // jumpKey.onDown.add(jump, this);
+    upKey = game.input.keyboard.addKey(Phaser.Keyboard.UP);
+    spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+    iKey = game.input.keyboard.addKey(Phaser.Keyboard.I);
+    wKey = game.input.keyboard.addKey(Phaser.Keyboard.W);
 
     if (DEBUG) {
         jetpackKey = game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
     }
 
     rightKey = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
+    dKey = game.input.keyboard.addKey(Phaser.Keyboard.D);
+    lKey = game.input.keyboard.addKey(Phaser.Keyboard.L);
+    
     leftKey = game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
+    aKey = game.input.keyboard.addKey(Phaser.Keyboard.A);
+    jKey = game.input.keyboard.addKey(Phaser.Keyboard.J);
 
     map = game.add.tilemap(); // Creates a blank tilemap
     map.addTilesetImage("tiles");
