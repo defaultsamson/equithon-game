@@ -7,8 +7,6 @@ var ingame = {
 var player;
 var playerText;
 
-var juicebox;
-
 var map;
 var layer1;
 
@@ -153,9 +151,6 @@ function gameCreate() {
     glucoseBar.width = 700;
     glucoseBar.height = 20;
 
-    arrow = game.add.sprite(400, 0, "arrow"); //pointer on health bar
-    arrow.fixedToCamera = true;
-
     goose = game.add.sprite(WIDTH/2, 200, "goose"); 
     goose.scale.setTo(0.1, 0.1); 
     game.physics.enable(goose); 
@@ -172,13 +167,6 @@ function gameCreate() {
     arrow.fixedToCamera = true;
     arrow.width = 20;
     arrow.height = 40;
-
-    juicebox = game.add.sprite(500, 200, "juicebox"); //at help random spawning...
-    juicebox.scale.setTo(0.5, 0.5);
-    game.physics.enable(juicebox); //gives juicebox sprite a physics body at
-    juicebox.body.allowGravity = false;
-    juicebox.body.immovable = true;
-    juicebox.body.debug = true;
 
     // TODO
     //game.camera.follow(player)
@@ -205,32 +193,6 @@ function updatePlayerText() {
     playerText.y = newy;
 }
 
-//spawn juice boxes
-function juiceRespawn() {
-    juicebox.body.enable = false;
-    juicebox.body.visible = false;
-    //for (i=0; i<3; i++){
-    let validSpawn = true;
-    let newx, newy;
-    do {
-        validSpawn = true;
-        newx = game.rnd.integerInRange(game.camera.x + WIDTH, game.camera.x + 2 * WIDTH);
-        newy = game.rnd.integerInRange(0, HEIGHT);
-        console.log("trying x: " + newx + " y: " + newy);
-        juicebox.body.allowGravity = false;
-        juicebox.body.immovable = true;
-        this.game.physics.arcade.collide(juicebox, layer1, ()=>{
-            console.log("invalid spot");
-            validSpawn = false;
-        });
-    } while (!validSpawn);
-    juicebox.x = newx;
-    juicebox.y = newy;
-    juicebox.body.enable = true;
-    juicebox.body.visible = true;
-    console.log("Spawned new juice at x: " + juicebox.x + " y: " + juicebox.y);
-}
-
 // Update game objects
 function gameUpdate() {
 
@@ -252,15 +214,6 @@ function gameUpdate() {
         touchingGround = true;
     } else {
         touchingGround = false;
-    }
-
-    //at - if collision happens between player and juicebox
-    this.game.physics.arcade.collide(player, juicebox, () => {
-        changeBloodSugar(30);
-    }); //check line 114
-
-    if (juicebox.x < game.camera.x - 500) {
-        juiceRespawn();
     }
 
     updateSugar()
