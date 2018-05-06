@@ -113,8 +113,15 @@ function gameCreate() {
     addMap("start");
     addMap("ruins");
     addMap("ruins");
-    
-    spawnJuice()
+    addMap("ruins");
+    addMap("ruins");
+    addMap("ruins");
+    addMap("ruins");
+    addMap("ruins");
+    addMap("ruins");
+    addMap("ruins");
+    addMap("ruins");
+    addMap("ruins");
 
     player = game.add.sprite(200, 40, "player");
     player.scale.setTo(PLAYER_SCALE, PLAYER_SCALE);
@@ -150,8 +157,15 @@ function gameCreate() {
     console.log("Ready!");
 }
 
+var dothe = true;
+
 // Update game objects
 function gameUpdate() {
+    if (dothe) {
+        dothe = false;
+        spawnJuice()
+    }
+
     // Makes the camera move to the left when the player pushes the viewport forward
     cameraOff = Math.max(cameraOff + CAMERA_SPEED, player.x + 16 - (2 * WIDTH / 3));
     game.camera.x = cameraOff;

@@ -43,9 +43,10 @@ function updateSugar() {
 }
 
 var juices = [];
-const JUICE_NUM = 25;
+const JUICE_NUM = 20;
 const SPAWN_DEADZONE = 40; // start and stop spawning the juices this many blocks into the levels
 const SPAWN_DEVIATION = 8; // plus or minus randomization for x pos
+const IN_STRUCTURE_JUICE_CHANCE = 80; // percentage chance that juice will spawn in a structure when given the chance
 
 function collideJuicebox(juice) {
     changeBloodSugar(30);
@@ -76,18 +77,20 @@ function spawnJuice() {
     console.log("spawning every: " + spawnEvery)
 
     for (var i = 0; i < JUICE_NUM; i++) {
-        var xOrd = SPAWN_DEADZONE + (spawnEvery * i) + game.rnd.integerInRange(-SPAWN_DEVIATION, SPAWN_DEVIATION);
-        console.log("xOrd: " + xOrd)
+        var xOrd = SPAWN_DEADZONE + (spawnEvery * i) + getRandomInt(-SPAWN_DEVIATION, SPAWN_DEVIATION);
+        //console.log("xOrd: " + xOrd)
 
         // An array of yOrds. Aviable tile is any tile that is empty or able to be passed through
         var viableYOrds = [];
+        var inHouseOrds = [];
 
         for (var y = 0; y < WORLD_HEIGHT; y++) {
-            var tile = map.getTile(xOrd, y);
+            var tile = map.getTile(xOrd, y, layer1);
+
             if (tile && tile.index != -1) {
                 if (COLLISION_IDS.indexOf(tile.index) == -1) {
                     // Non-collidable tile
-                    viableYOrds.push(y);
+                    inHouseOrds.push(y);
                 }
             } else {
                 // Empty tile
@@ -95,17 +98,27 @@ function spawnJuice() {
             }
         }
 
+        var doInHouse = getRandomInt(0, 100) < IN_STRUCTURE_JUICE_CHANCE || viableYOrds.length == 0;
+
+        var yOrd;
         // If there exists a viable y ordinate, use it, else too bad, pass that spot
-        if (viableYOrds.length > 0) {
-            var yOrd = viableYOrds[game.rnd.integerInRange(0, viableYOrds.length - 1)];
+        if (inHouseOrds.length > 0 && doInHouse) {
+            yOrd = inHouseOrds[getRandomInt(0, viableYOrds.length - 1)];
+        } else if (viableYOrds.length > 0) {
+            yOrd = viableYOrds[getRandomInt(0, viableYOrds.length - 1)];
         }
 
         var juicebox = game.add.sprite(xOrd * BLOCK_WIDTH, yOrd * BLOCK_HEIGHT, "juicebox");
-        juicebox.scale.setTo(0.4, 0.4);
+        juicebox.scale.setTo(0.34, 0.34);
+        juicebox.anchor.setTo(0, 0.3);
         game.physics.enable(juicebox);
         juicebox.body.allowGravity = false;
         juicebox.body.immovable = true;
 
         juices.push(juicebox)
     }
+}
+
+function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
 }
