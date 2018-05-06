@@ -32,6 +32,12 @@ function gamePreload() {
     //game.load.tilemap("start", "assets/start.json", null, Phaser.Tilemap.TILED_JSON)
     game.load.json("start", "assets/start.json");
     game.load.json("ruins", "assets/ruins.json");
+    game.load.json("test1", "assets/test1.json");
+    game.load.json("test2", "assets/test2.json");
+    game.load.json("test3", "assets/test3.json");
+    game.load.json("test4", "assets/test4.json");
+    game.load.json("test5", "assets/test5.json");
+    game.load.json("test6", "assets/test6.json");
 
     // Loading Images
     game.load.image("tiles", "assets/tiles.png");
@@ -103,13 +109,17 @@ function gameCreate() {
     map.setCollision(COLLISION_IDS, true, layer1);
     addMap("start");
     addMap("ruins");
-    addMap("ruins");
-    addMap("ruins");
-    addMap("ruins");
-    addMap("ruins");
-    addMap("ruins");
-    addMap("ruins");
-    addMap("ruins");
+    addMap("test1");
+    addMap("test2");
+    addMap("test3");
+    addMap("test4");
+    addMap("test5");
+    addMap("test6");
+    addMap("test4");
+    addMap("test2");
+    addMap("test2");
+    addMap("test2");
+    addMap("test2");
     addMap("ruins");
     addMap("ruins");
     addMap("ruins");
