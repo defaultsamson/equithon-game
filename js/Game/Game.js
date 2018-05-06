@@ -43,6 +43,12 @@ function gamePreload() {
     game.load.json("test5", "assets/test5.json");
     game.load.json("test6", "assets/test6.json");
 
+    game.load.json("entrance", "assets/sec2/entrance.json");
+    game.load.json("classroom", "assets/sec2/classroom.json");
+
+    game.load.json("belunga", "assets/belunga.json");
+    game.load.json("spiral", "assets/spiral.json");
+
     // Loading Images
     game.load.image("tiles", "assets/tiles.png");
     game.load.image("juicebox", "assets/juice.png"); //at
