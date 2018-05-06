@@ -1,3 +1,7 @@
+// Screen width and height
+const WIDTH = 800;
+const HEIGHT = 600;
+
 const WORLD_WIDTH = 400;
 const WORLD_HEIGHT = 19;
 const BLOCK_WIDTH = 32;

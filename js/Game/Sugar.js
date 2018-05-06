@@ -36,3 +36,7 @@ function updateSugar() {
 
     arrow.x = game.camera.x + bloodSugar * 3.6; //fixing arrow motion
 }
+
+function spawnJuice() {
+    
+}

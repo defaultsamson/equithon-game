@@ -164,8 +164,9 @@ function gameUpdate() {
 
     updateControls()
 
+    // TODO test this shit, it's messed
     // End game if player falls off screen
-    if (player.x < 1 || player.y > 399) {
+    if (player.x + 16 < game.camera.x) {
         endGame();
     }
 
