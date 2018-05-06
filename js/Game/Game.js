@@ -5,6 +5,7 @@ var ingame = {
 }
 
 //anjie trying end screen
+/*
 var wonGame = {
     preload: wonPreload,
     create: wonCreate,
@@ -22,6 +23,7 @@ function wonCreate() {
 function wonUpdate() {
     console.log("hi")
 }
+*/
 
 //
 
@@ -337,10 +339,11 @@ function restartGame() {
 }
 
 //anjie trying to access wonGamestate
+/*
 function finish(){
     console.log("finishing");
     game.state.start("wonGame");
-}
+}*/
 
 
 //fixing arrow motion
