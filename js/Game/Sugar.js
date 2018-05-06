@@ -8,9 +8,8 @@ function changeBloodSugar(degOfChange) {
         endGame();
     } else {
         bloodSugar += degOfChange;
-        juicebox.destroy();
         console.log(bloodSugar)
-        juiceSpawn();
+        juiceRespawn();
     }
 }
 

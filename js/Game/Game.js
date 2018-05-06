@@ -5,6 +5,9 @@ var ingame = {
 }
 
 var player;
+var playerText;
+
+var juicebox;
 
 var map;
 var layer1;
@@ -12,6 +15,7 @@ var layer1;
 var rightKey;
 var leftKey;
 var jumpKey;
+var jetpackKey;
 
 var glucoseBar;
 var glucoseTextPrefix = "Glucose Level (mg/dL): ";
@@ -25,6 +29,8 @@ var sky4;
 
 var cameraOff = 0;
 
+var DEBUG = true;
+
 // Load resources
 function gamePreload() {
     // Loading tilemaps
@@ -34,7 +40,7 @@ function gamePreload() {
 
     // Loading Images
     game.load.image("tiles", "assets/tiles.png");
-    game.load.image("player", "assets/player0.png");
+    //game.load.image("player", "assets/player0.png");
     game.load.image("juicebox", "assets/juice.png"); //at
     game.load.image("healthbar", "assets/healthBar.png");
     game.load.image("arrow", "assets/arrow.png");
@@ -54,23 +60,6 @@ function gamePreload() {
     { frameWidth: 32, frameHeight: 48 }
     );
     */
-}
-
-//spawn juice boxes
-function juiceSpawn() {
-    //for (i=0; i<3; i++){
-    juicebox = game.add.sprite(game.rnd.integerInRange(game.camera.x, game.camera.x+WIDTH), game.rnd.integerInRange(0, 600), "juicebox"); //at help random spawning...
-    juicebox.scale.setTo(0.5, 0.5);
-    game.physics.enable(juicebox); //gives juicebox sprite a physics body at
-    juicebox.body.allowGravity = false;
-    juicebox.body.immovable = true;
-    this.game.physics.arcade.collide(juicebox, layer1, ()=>{
-        juicebox.destroy();
-        juiceSpawn();
-        console.log("yay");
-    });
-    
-    //}
 }
 
 // Create game objects
@@ -104,6 +93,10 @@ function gameCreate() {
     jumpKey = game.input.keyboard.addKey(Phaser.Keyboard.UP);
     // jumpKey.onDown.add(jump, this);
 
+    if (DEBUG) {
+        jetpackKey = game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
+    }
+
     rightKey = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
     leftKey = game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
 
@@ -125,16 +118,11 @@ function gameCreate() {
     player = game.add.sprite(40, 40, "player");
     player.scale.setTo(PLAYER_SCALE, PLAYER_SCALE);
     game.physics.enable(player); // Gives player a physics body
-    player.body.bounce.x = 0.05;game.physics.arcade.enable(layers[3]); // Slightly bouncy off wall
+    player.body.bounce.x = 0.05;
+    //game.physics.arcade.enable(layers[3]); // Slightly bouncy off wall
     player.body.collideWorldBounds = true; // Collide with the
     player.animations.add('walk', [0, 1], 4, true);
     player.anchor.setTo(0.5, 0.5);
-
-    juicebox = game.add.sprite(500, 200, "juicebox"); //at help random spawning...
-    juicebox.scale.setTo(0.5, 0.5);
-    game.physics.enable(juicebox); //gives juicebox sprite a physics body at
-    juicebox.body.allowGravity = false;
-    juicebox.body.immovable = true;
 
     arrow = game.add.sprite(400, 0, "arrow"); //pointer on health bar
     arrow.fixedToCamera = true;
@@ -150,6 +138,13 @@ function gameCreate() {
     glucoseText = game.add.text(300, 0, glucoseTextPrefix, textStyle);
     glucoseText.fixedToCamera = true;
 
+    juicebox = game.add.sprite(500, 200, "juicebox"); //at help random spawning...
+    juicebox.scale.setTo(0.5, 0.5);
+    game.physics.enable(juicebox); //gives juicebox sprite a physics body at
+    juicebox.body.allowGravity = false;
+    juicebox.body.immovable = true;
+    juicebox.body.debug = true;
+
     // TODO
     //game.camera.follow(player)
 
@@ -159,7 +154,46 @@ function gameCreate() {
     // Moves the camera to the bottom of the world
     game.camera.y = 300;
 
+    if (DEBUG) {
+        playerText = game.add.text(player.x, player.y, "(" + player.x + ", " + player.y + ")", textStyle);
+        alert("Debug mode on.");
+    }
+
     console.log("Ready!");
+}
+
+function updatePlayerText() {
+    newx = player.x;
+    newy = player.y;
+    playerText.setText("(" + newx + ", " + newy + ")");
+    playerText.x = newx;
+    playerText.y = newy;
+}
+
+//spawn juice boxes
+function juiceRespawn() {
+    juicebox.body.enable = false;
+    juicebox.body.visible = false;
+    //for (i=0; i<3; i++){
+    let validSpawn = true;
+    let newx, newy;
+    do {
+        validSpawn = true;
+        newx = game.rnd.integerInRange(game.camera.x + WIDTH, game.camera.x + 2 * WIDTH);
+        newy = game.rnd.integerInRange(0, HEIGHT);
+        console.log("trying x: " + newx + " y: " + newy);
+        juicebox.body.allowGravity = false;
+        juicebox.body.immovable = true;
+        this.game.physics.arcade.collide(juicebox, layer1, ()=>{
+            console.log("invalid spot");
+            validSpawn = false;
+        });
+    } while (!validSpawn);
+    juicebox.x = newx;
+    juicebox.y = newy;
+    juicebox.body.enable = true;
+    juicebox.body.visible = true;
+    console.log("Spawned new juice at x: " + juicebox.x + " y: " + juicebox.y);
 }
 
 // Update game objects
@@ -188,7 +222,14 @@ function gameUpdate() {
         changeBloodSugar(30);
     }); //check line 114
 
+    if (juicebox.x < game.camera.x - 500) {
+        juiceRespawn();
+    }
+
     updateSugar()
+    if (DEBUG) {
+        updatePlayerText();
+    }
 }
 
 //fixing arrow motion
