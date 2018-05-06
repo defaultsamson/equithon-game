@@ -5,6 +5,9 @@ var ingame = {
 }
 
 var player;
+var playerText;
+
+var juicebox;
 
 var map;
 var layer1;
@@ -12,6 +15,7 @@ var layer1;
 var rightKey;
 var leftKey;
 var jumpKey;
+var jetpackKey;
 
 var glucoseBar;
 var glucoseTextPrefix = "Glucose Level (mg/dL): ";
@@ -25,6 +29,8 @@ var sky3;
 var sky4;
 
 var cameraOff = 0;
+
+var DEBUG = true;
 
 // Load resources
 function gamePreload() {
@@ -95,6 +101,10 @@ function gameCreate() {
     jumpKey = game.input.keyboard.addKey(Phaser.Keyboard.UP);
     // jumpKey.onDown.add(jump, this);
 
+    if (DEBUG) {
+        jetpackKey = game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
+    }
+
     rightKey = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
     leftKey = game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
 
@@ -105,6 +115,7 @@ function gameCreate() {
 
     layer1 = map.create("layer1", WORLD_WIDTH, WORLD_HEIGHT, BLOCK_WIDTH, BLOCK_HEIGHT);
     layer1.resizeWorld();
+    game.physics.arcade.enable(layer1);
 
     map.setCollision(COLLISION_IDS, true, layer1);
     addMap("start");
@@ -131,7 +142,8 @@ function gameCreate() {
     player = game.add.sprite(200, 40, "player");
     player.scale.setTo(PLAYER_SCALE, PLAYER_SCALE);
     game.physics.enable(player); // Gives player a physics body
-    player.body.bounce.x = 0.05; // Slightly bouncy off wall
+    player.body.bounce.x = 0.05;
+    //game.physics.arcade.enable(layers[3]); // Slightly bouncy off wall
     player.body.collideWorldBounds = true; // Collide with the
     player.animations.add('walk', [0, 1], 4, true);
     player.anchor.setTo(0.5, 0.5);
@@ -156,6 +168,18 @@ function gameCreate() {
     glucoseText = game.add.text(300, 0, glucoseTextPrefix, textStyle);
     glucoseText.fixedToCamera = true;
 
+    arrow = game.add.sprite(400, 30, "arrow"); //pointer on health bar
+    arrow.fixedToCamera = true;
+    arrow.width = 20;
+    arrow.height = 40;
+
+    juicebox = game.add.sprite(500, 200, "juicebox"); //at help random spawning...
+    juicebox.scale.setTo(0.5, 0.5);
+    game.physics.enable(juicebox); //gives juicebox sprite a physics body at
+    juicebox.body.allowGravity = false;
+    juicebox.body.immovable = true;
+    juicebox.body.debug = true;
+
     // TODO
     //game.camera.follow(player)
 
@@ -165,7 +189,46 @@ function gameCreate() {
     // Moves the camera to the bottom of the world
     game.camera.y = 300;
 
+    if (DEBUG) {
+        playerText = game.add.text(player.x, player.y, "(" + player.x + ", " + player.y + ")", textStyle);
+        alert("Debug mode on.");
+    }
+
     console.log("Ready!");
+}
+
+function updatePlayerText() {
+    newx = player.x;
+    newy = player.y;
+    playerText.setText("(" + newx + ", " + newy + ")");
+    playerText.x = newx;
+    playerText.y = newy;
+}
+
+//spawn juice boxes
+function juiceRespawn() {
+    juicebox.body.enable = false;
+    juicebox.body.visible = false;
+    //for (i=0; i<3; i++){
+    let validSpawn = true;
+    let newx, newy;
+    do {
+        validSpawn = true;
+        newx = game.rnd.integerInRange(game.camera.x + WIDTH, game.camera.x + 2 * WIDTH);
+        newy = game.rnd.integerInRange(0, HEIGHT);
+        console.log("trying x: " + newx + " y: " + newy);
+        juicebox.body.allowGravity = false;
+        juicebox.body.immovable = true;
+        this.game.physics.arcade.collide(juicebox, layer1, ()=>{
+            console.log("invalid spot");
+            validSpawn = false;
+        });
+    } while (!validSpawn);
+    juicebox.x = newx;
+    juicebox.y = newy;
+    juicebox.body.enable = true;
+    juicebox.body.visible = true;
+    console.log("Spawned new juice at x: " + juicebox.x + " y: " + juicebox.y);
 }
 
 // Update game objects
@@ -191,7 +254,19 @@ function gameUpdate() {
         touchingGround = false;
     }
 
-    updateSugar();
+    //at - if collision happens between player and juicebox
+    this.game.physics.arcade.collide(player, juicebox, () => {
+        changeBloodSugar(30);
+    }); //check line 114
+
+    if (juicebox.x < game.camera.x - 500) {
+        juiceRespawn();
+    }
+
+    updateSugar()
+    if (DEBUG) {
+        updatePlayerText();
+    }
     moveSky();
 }
 

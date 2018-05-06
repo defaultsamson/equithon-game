@@ -20,6 +20,13 @@ function updateControls() {
         player.animations.stop("walk");
     }
 
+    if (DEBUG && jetpackKey.isDown) {
+        if (player.body.velocity.y > 100) {
+            player.body.velocity.y = 100;
+        }
+        player.body.velocity.y -= 50;
+    }
+
     // Jump controls
     if (touchingGround && jumpKey.isDown) {
         jump();
