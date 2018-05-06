@@ -19,7 +19,7 @@ var glucoseBar;
 var glucoseTextPrefix = "Glucose Level (mg/dL): ";
 var glucoseText;
 
-var goose; 
+var goose;
 var sky0;
 var sky1;
 var sky2;
@@ -28,7 +28,7 @@ var sky4;
 
 var cameraOff = 0;
 
-var DEBUG = true;
+var DEBUG = false;
 
 // Load resources
 function gamePreload() {
@@ -58,7 +58,7 @@ function gamePreload() {
 
     // 105 by 133 images, 2 frames
     game.load.spritesheet("player", "assets/player.png", 105, 133, 2);
-    game.load.spritesheet("goose", "assets/goosesprite.png", 440, 580, 2); 
+    game.load.spritesheet("goose", "assets/goosesprite.png", 440, 580, 2);
 
     /* // Spritesheet loading example
     this.load.spritesheet('dude',
@@ -109,14 +109,13 @@ function gameCreate() {
     map = game.add.tilemap(); // Creates a blank tilemap
     map.addTilesetImage("tiles");
 
-    layer0 = map.create("layer2", WORLD_WIDTH, WORLD_HEIGHT, BLOCK_WIDTH, BLOCK_HEIGHT);
-
     layer1 = map.create("layer1", WORLD_WIDTH, WORLD_HEIGHT, BLOCK_WIDTH, BLOCK_HEIGHT);
     layer1.resizeWorld();
     game.physics.arcade.enable(layer1);
-
     map.setCollision(COLLISION_IDS, true, layer1);
-    addMap("start");
+
+    initMapPieces();
+    addMapByName("start");
     /*
     addMap("ruins");
     addMap("test1");
@@ -133,8 +132,8 @@ function gameCreate() {
     addMap("ruins");
     addMap("ruins");
     addMap("ruins");*/
-    generateRandomMap();
-    
+    generateRandomMap(380);
+
     spawnJuice();
 
     player = game.add.sprite(200, 40, "player");
@@ -151,16 +150,16 @@ function gameCreate() {
     glucoseBar.width = 700;
     glucoseBar.height = 20;
 
-    goose = game.add.sprite(WIDTH/2, 200, "goose"); 
-    goose.scale.setTo(0.1, 0.1); 
-    game.physics.enable(goose); 
-    goose.body.allowGravity = false; 
-    goose.body.immovable = true; 
+    goose = game.add.sprite(WIDTH / 2, 200, "goose");
+    goose.scale.setTo(0.1, 0.1);
+    game.physics.enable(goose);
+    goose.body.allowGravity = false;
+    goose.body.immovable = true;
 
     var textStyle = {
-        'font': "16pt Comic Sans MS"
+        font: "16pt Verdana"
     }
-    glucoseText = game.add.text(300, 0, glucoseTextPrefix, textStyle);
+    glucoseText = game.add.text(250, 3, glucoseTextPrefix, textStyle);
     glucoseText.fixedToCamera = true;
 
     arrow = game.add.sprite(400, 30, "arrow"); //pointer on health bar

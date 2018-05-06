@@ -1,17 +1,42 @@
 var xOffset = 0;
 
-function generateRandomMap() {
-    const pieceNames = ["test1", "test2", "test3", "test4", "test5", "test6"];
-    var pieces = [];
+const HIGH_BOUND = 10; // blocks 
+const LOW_BOUND = 18; // blocks
 
+const pieceNames = ["test1", "test2", "test3", "test4", "test5", "test6"];
+var pieces = [];
+
+function initMapPieces() {
     for (var i in pieceNames) {
         pieces.push({
             change: getAltitudeChange(pieceNames[i]),
             json: game.cache.getJSON(pieceNames[i])
         })
-        console.log("dank: " + pieces[i].change)
     }
+}
 
+function generateRandomMap(generateUntil) {
+    while (xOffset < generateUntil) {
+        var altitude = currentAltitude();
+        var acceptablePieces = [];
+
+        for (var i in pieces) {
+            var newAltitude = altitude + pieces[i].change
+            console.log("newAltitude: " + newAltitude)
+            if (newAltitude <= LOW_BOUND && newAltitude >= HIGH_BOUND) {
+                acceptablePieces.push(pieces[i])
+                console.log("dank")
+            }
+        }
+
+        if (acceptablePieces.length == 0) {
+            console.log("ERROR: couldn't find suitable piece. This should never happen!")
+            break;
+        }
+        var piece = acceptablePieces[getRandomInt(0, acceptablePieces.length - 1)]
+
+        addMap(piece.json);
+    }
 }
 
 function getAltitudeChange(toAdd) {
@@ -43,16 +68,19 @@ function getAltitudeChange(toAdd) {
     return endHeight - startHeight;
 }
 
-function getYOffset(data, width, height) {
-    var startHeight = 0;
+function currentAltitude() {
+    var altitude = 0;
     for (var y = 0; y < WORLD_HEIGHT; y++) {
         if (map.getTile(xOffset - 1, y, layer1)) {
             break;
         } else {
-            startHeight++;
+            altitude++;
         }
     }
+    return altitude;
+}
 
+function getYOffset(data, width, height) {
     var offsetHeight = 0;
     for (var y = 0; y < height; y++) {
         // Empty tile
@@ -64,15 +92,18 @@ function getYOffset(data, width, height) {
     }
 
     // If xOffset == 0 then this is the first block, just place normally
-    return xOffset == 0 ? 0 : startHeight - offsetHeight;
+    return xOffset == 0 ? 0 : currentAltitude() - offsetHeight;
+}
+
+function addMapByName(toAdd) {
+    addMap(game.cache.getJSON(toAdd));
 }
 
 function addMap(toAdd) {
 
-    var taMap = game.cache.getJSON(toAdd);
-    var data = taMap.layers[0].data;
-    var width = taMap.layers[0].width;
-    var height = taMap.layers[0].height;
+    var data = toAdd.layers[0].data;
+    var width = toAdd.layers[0].width;
+    var height = toAdd.layers[0].height;
 
     var yOffset = getYOffset(data, width, height);
 
