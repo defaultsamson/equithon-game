@@ -170,8 +170,8 @@ function gameCreate() {
     spawnJuice();
 
     player = game.add.sprite(210, 400, "player");
-    player.scale.setTo(.2, .2);
-    //player.scale.setTo(PLAYER_SCALE, PLAYER_SCALE);
+    //player.scale.setTo(.2, .2);
+    player.scale.setTo(PLAYER_SCALE, PLAYER_SCALE);
     game.physics.enable(player); // Gives player a physics body
     player.body.bounce.x = 0.05;
     //game.physics.arcade.enable(layers[3]); // Slightly bouncy off wall
