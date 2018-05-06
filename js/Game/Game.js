@@ -231,5 +231,6 @@ function gameUpdate() {
 
 //fixing arrow motion
 function endGame() {
-
+    game.paused = true;
+    console.log("Game over");
 }
