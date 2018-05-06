@@ -223,20 +223,18 @@ function updatePlayerText() {
     playerText.y = newy;
 }
 
+var respawnPlayer = 6;
+
 // Update game objects
 function gameUpdate() {
-    if (dead) {
-        if (!stopFlashStart && Date.now() - deadFlashStartTimer >= deadFlashStart) {
-            deadFlash = true;
-        }
 
-        if (deadFlash) {
-            if (Date.now() - deadFlashTimer > FLASH_INTERVAL) {
-                deadFlashTimer = Date.now();
-                continueText.visible = !continueText.visible;
-            }
-        }
-    } else {
+    if (respawnPlayer > 0) {
+        player.x = 210;
+        player.y = 400;
+        respawnPlayer--;
+    }
+
+    if (!dead) {
         // Makes the camera move to the left when the player pushes the viewport forward
         cameraOff = Math.max(cameraOff + CAMERA_SPEED, player.x + 16 - (2 * WIDTH / 3));
         game.camera.x = cameraOff;
@@ -248,21 +246,23 @@ function gameUpdate() {
         if (player.x + 16 < game.camera.x) {
             endGame();
         }
+    }
 
-        // check if touching ground and handle collisions
-        this.game.physics.arcade.collide(player, layer1);
-        if (player.body.onFloor()) {
-            touchingGround = true;
-        } else {
-            touchingGround = false;
-        }
+    // check if touching ground and handle collisions
+    this.game.physics.arcade.collide(player, layer1);
+    if (player.body.onFloor()) {
+        touchingGround = true;
+    } else {
+        touchingGround = false;
+    }
 
+    if (!dead) {
         updateSugar()
         if (DEBUG) {
             updatePlayerText();
         }
-        moveSky();
     }
+    moveSky();
 }
 
 var dead = false;
@@ -275,18 +275,26 @@ var deadFlashTimer = 0;
 function restartGame() {
     if (dead) {
         dead = false;
-        map.destroy();
+        cameraOff = 0;
+        game.camera.x = 0;
+        bloodSugar = 100;
+        respawnPlayer = 6;
+        loseText.visible = false;
+        continueText.visible = false;
     }
 }
 
+
 //fixing arrow motion
 function endGame() {
+
     dead = true;
+    /*
     deadFlash = false;
     deadFlashStart = 3500;
     deadFlashStartTimer = Date.now();
-    deadFlashTimer = 0;
-    
+    deadFlashTimer = 0;*/
+
     loseText.visible = true;
     continueText.visible = true;
     console.log("Game over");
