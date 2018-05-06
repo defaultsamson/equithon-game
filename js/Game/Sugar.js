@@ -8,7 +8,6 @@ function changeBloodSugar(degOfChange) {
         endGame();
     } else {
         bloodSugar += degOfChange;
-        console.log(bloodSugar)
     }
 }
 
@@ -74,11 +73,8 @@ function spawnJuice() {
 
     var spawnEvery = Math.round((WORLD_WIDTH - (2 * SPAWN_DEADZONE)) / JUICE_NUM)
 
-    console.log("spawning every: " + spawnEvery)
-
     for (var i = 0; i < JUICE_NUM; i++) {
         var xOrd = SPAWN_DEADZONE + (spawnEvery * i) + getRandomInt(-SPAWN_DEVIATION, SPAWN_DEVIATION);
-        //console.log("xOrd: " + xOrd)
 
         // An array of yOrds. Aviable tile is any tile that is empty or able to be passed through
         var viableYOrds = [];

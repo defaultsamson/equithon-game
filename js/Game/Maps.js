@@ -1,5 +1,48 @@
 var xOffset = 0;
 
+function generateRandomMap() {
+    const pieceNames = ["test1", "test2", "test3", "test4", "test5", "test6"];
+    var pieces = [];
+
+    for (var i in pieceNames) {
+        pieces.push({
+            change: getAltitudeChange(pieceNames[i]),
+            json: game.cache.getJSON(pieceNames[i])
+        })
+        console.log("dank: " + pieces[i].change)
+    }
+
+}
+
+function getAltitudeChange(toAdd) {
+    var taMap = game.cache.getJSON(toAdd);
+    var data = taMap.layers[0].data;
+    var width = taMap.layers[0].width;
+    var height = taMap.layers[0].height;
+
+    var startHeight = 0;
+    for (var y = 0; y < height; y++) {
+        // Empty tile
+        if (data[y * width] == 0) {
+            startHeight++;
+        } else {
+            break;
+        }
+    }
+
+    var endHeight = 0;
+    for (var y = 0; y < height; y++) {
+        // Empty tile
+        if (data[y * width + width - 1] == 0) {
+            endHeight++;
+        } else {
+            break;
+        }
+    }
+
+    return endHeight - startHeight;
+}
+
 function getYOffset(data, width, height) {
     var startHeight = 0;
     for (var y = 0; y < WORLD_HEIGHT; y++) {

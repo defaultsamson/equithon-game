@@ -108,6 +108,7 @@ function gameCreate() {
 
     map.setCollision(COLLISION_IDS, true, layer1);
     addMap("start");
+    /*
     addMap("ruins");
     addMap("test1");
     addMap("test2");
@@ -122,7 +123,8 @@ function gameCreate() {
     addMap("test2");
     addMap("ruins");
     addMap("ruins");
-    addMap("ruins");
+    addMap("ruins");*/
+    generateRandomMap();
     
     spawnJuice();
 
