@@ -25,6 +25,8 @@ function wonUpdate() {
 
 //
 
+var completed = false;
+
 var player;
 var playerText;
 
@@ -215,9 +217,19 @@ function gameCreate() {
         font: "86pt Verdana",
         fill: "white"
     }
+    
+    var winStyle = {
+        font: "30pt Verdana",
+        fill: "white",
+        align: "left"
+    }
     loseText = game.add.text(80, 100, "Game Over", loseStyle);
     loseText.fixedToCamera = true;
     loseText.visible = false;
+    
+    winText = game.add.text(80,100, "Congratulations! \n You got home with \nyour sugar balanced.", winStyle);
+    winText.fixedToCamera=true;
+    winText.visible=false; 
 
     var textStyle = {
         font: "22pt Verdana",
@@ -273,6 +285,15 @@ function gameUpdate() {
 
         //anjie trying to go to end screen
         if (player.x>game.camera.x+750) {
+            
+            winText.visible=true;
+            /*if (dead) {
+                winText.visible=false;
+                restartGame();
+            }*/
+            completed=true;
+            arrow.visible=false;
+            
             console.log("omw to winning")
             finish();        
         }
@@ -293,6 +314,7 @@ function gameUpdate() {
         }
     }
     moveSky();
+    if (completed) bloodSugar=100;
 }
 
 var dead = false;
@@ -336,3 +358,4 @@ function endGame() {
     continueText.visible = true;
     console.log("Game over");
 }
+
