@@ -4,6 +4,31 @@ var ingame = {
     update: gameUpdate
 }
 
+//anjie trying end screen
+/*
+var wonGame = {
+    preload: wonPreload,
+    create: wonCreate,
+    update: wonUpdate
+}
+
+function wonPreload() {
+    game.load.image("endJuice", "assets/juice.png");
+}
+function wonCreate() {
+    console.log("hi");
+}
+
+
+function wonUpdate() {
+    console.log("hi")
+}
+*/
+
+//
+
+var completed = false;
+
 var player;
 var playerText;
 
@@ -68,6 +93,7 @@ function gamePreload() {
     );
     */
 }
+
 
 // Create game objects
 function gameCreate() {
@@ -144,7 +170,8 @@ function gameCreate() {
     spawnJuice();
 
     player = game.add.sprite(210, 400, "player");
-    player.scale.setTo(PLAYER_SCALE, PLAYER_SCALE);
+    player.scale.setTo(.2, .2);
+    //player.scale.setTo(PLAYER_SCALE, PLAYER_SCALE);
     game.physics.enable(player); // Gives player a physics body
     player.body.bounce.x = 0.05;
     //game.physics.arcade.enable(layers[3]); // Slightly bouncy off wall
@@ -192,9 +219,19 @@ function gameCreate() {
         font: "86pt Verdana",
         fill: "white"
     }
+    
+    var winStyle = {
+        font: "30pt Verdana",
+        fill: "white",
+        align: "left"
+    }
     loseText = game.add.text(80, 100, "Game Over", loseStyle);
     loseText.fixedToCamera = true;
     loseText.visible = false;
+    
+    winText = game.add.text(80,100, "Congratulations! \n You got home with \nyour sugar balanced.", winStyle);
+    winText.fixedToCamera=true;
+    winText.visible=false; 
 
     var textStyle = {
         font: "22pt Verdana",
@@ -246,6 +283,22 @@ function gameUpdate() {
         if (player.x + 16 < game.camera.x) {
             endGame();
         }
+        
+
+        //anjie trying to go to end screen
+        if (player.x>game.camera.x+750) {
+            
+            winText.visible=true;
+            /*if (dead) {
+                winText.visible=false;
+                restartGame();
+            }*/
+            completed=true;
+            arrow.visible=false;
+            
+            console.log("omw to winning")
+            finish();        
+        }
     }
 
     // check if touching ground and handle collisions
@@ -263,6 +316,7 @@ function gameUpdate() {
         }
     }
     moveSky();
+    if (completed) bloodSugar=100;
 }
 
 var dead = false;
@@ -284,9 +338,17 @@ function restartGame() {
     }
 }
 
+//anjie trying to access wonGamestate
+/*
+function finish(){
+    console.log("finishing");
+    game.state.start("wonGame");
+}*/
+
 
 //fixing arrow motion
 function endGame() {
+    
 
     dead = true;
     /*
@@ -299,3 +361,4 @@ function endGame() {
     continueText.visible = true;
     console.log("Game over");
 }
+
