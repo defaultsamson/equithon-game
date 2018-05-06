@@ -108,7 +108,7 @@ function gameCreate() {
     rightKey = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
     dKey = game.input.keyboard.addKey(Phaser.Keyboard.D);
     lKey = game.input.keyboard.addKey(Phaser.Keyboard.L);
-    
+
     leftKey = game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
     aKey = game.input.keyboard.addKey(Phaser.Keyboard.A);
     jKey = game.input.keyboard.addKey(Phaser.Keyboard.J);
@@ -143,7 +143,7 @@ function gameCreate() {
 
     spawnJuice();
 
-    player = game.add.sprite(200, 40, "player");
+    player = game.add.sprite(210, 400, "player");
     player.scale.setTo(PLAYER_SCALE, PLAYER_SCALE);
     game.physics.enable(player); // Gives player a physics body
     player.body.bounce.x = 0.05;
@@ -188,6 +188,30 @@ function gameCreate() {
         alert("Debug mode on.");
     }
 
+    var loseStyle = {
+        font: "86pt Verdana",
+        fill: "white"
+    }
+    loseText = game.add.text(80, 100, "Game Over", loseStyle);
+    loseText.fixedToCamera = true;
+    loseText.visible = false;
+
+    var textStyle = {
+        font: "26pt Verdana",
+        fill: "white",
+        align: "center"
+    };
+    continueText = game.add.text(118, 500, "Press Space or Enter to continue", textStyle);
+    continueText.fixedToCamera = true;
+    continueText.visible = false;
+
+    var playButton1 = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+    var playButton2 = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
+    var playButton3 = game.input.keyboard.addKey(Phaser.Keyboard.S);
+    playButton1.onDown.add(restartGame, this);
+    playButton2.onDown.add(restartGame, this);
+    playButton3.onDown.add(restartGame, this);
+
     console.log("Ready!");
 }
 
@@ -201,36 +225,69 @@ function updatePlayerText() {
 
 // Update game objects
 function gameUpdate() {
+    if (dead) {
+        if (!stopFlashStart && Date.now() - deadFlashStartTimer >= deadFlashStart) {
+            deadFlash = true;
+        }
 
-    // Makes the camera move to the left when the player pushes the viewport forward
-    cameraOff = Math.max(cameraOff + CAMERA_SPEED, player.x + 16 - (2 * WIDTH / 3));
-    game.camera.x = cameraOff;
-
-    updateControls();
-
-    // TODO test this shit, it's messed
-    // End game if player falls off screen
-    if (player.x + 16 < game.camera.x) {
-        endGame();
-    }
-
-    // check if touching ground and handle collisions
-    this.game.physics.arcade.collide(player, layer1);
-    if (player.body.onFloor()) {
-        touchingGround = true;
+        if (deadFlash) {
+            if (Date.now() - deadFlashTimer > FLASH_INTERVAL) {
+                deadFlashTimer = Date.now();
+                continueText.visible = !continueText.visible;
+            }
+        }
     } else {
-        touchingGround = false;
-    }
+        // Makes the camera move to the left when the player pushes the viewport forward
+        cameraOff = Math.max(cameraOff + CAMERA_SPEED, player.x + 16 - (2 * WIDTH / 3));
+        game.camera.x = cameraOff;
 
-    updateSugar()
-    if (DEBUG) {
-        updatePlayerText();
+        updateControls();
+
+        // TODO test this shit, it's messed
+        // End game if player falls off screen
+        if (player.x + 16 < game.camera.x) {
+            endGame();
+        }
+
+        // check if touching ground and handle collisions
+        this.game.physics.arcade.collide(player, layer1);
+        if (player.body.onFloor()) {
+            touchingGround = true;
+        } else {
+            touchingGround = false;
+        }
+
+        updateSugar()
+        if (DEBUG) {
+            updatePlayerText();
+        }
+        moveSky();
     }
-    moveSky();
+}
+
+var dead = false;
+
+var deadFlash = false;
+var deadFlashStart;
+var deadFlashStartTimer = 0;
+var deadFlashTimer = 0;
+
+function restartGame() {
+    if (dead) {
+        dead = false;
+        map.destroy();
+    }
 }
 
 //fixing arrow motion
 function endGame() {
-    game.paused = true;
+    dead = true;
+    deadFlash = false;
+    deadFlashStart = 3500;
+    deadFlashStartTimer = Date.now();
+    deadFlashTimer = 0;
+    
+    loseText.visible = true;
+    continueText.visible = true;
     console.log("Game over");
 }

@@ -62,7 +62,7 @@ function menuCreate() {
     storyText1.fixedToCamera = true;
     storyText1.visible = false;
 
-    storyText2 = game.add.text(110, 100, "We hope that in our efforts\nyou will take it upon yourself\n to learn a little more about those\ndiabetes and how you can help\nwho have it.", textStyle);
+    storyText2 = game.add.text(110, 100, "We hope that in our efforts\nyou will take it upon yourself\n to learn a little more about those\ndiabetes and how you can help\nthose who have it.", textStyle);
     storyText2.fixedToCamera = true;
     storyText2.visible = false;
 
