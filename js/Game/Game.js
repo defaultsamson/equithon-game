@@ -156,7 +156,7 @@ function gameUpdate() {
     cameraOff = Math.max(cameraOff + CAMERA_SPEED, player.x + 16 - (2 * WIDTH / 3));
     game.camera.x = cameraOff;
 
-    updateControls()
+    updateControls();
 
     // TODO test this shit, it's messed
     // End game if player falls off screen
@@ -172,7 +172,8 @@ function gameUpdate() {
         touchingGround = false;
     }
 
-    updateSugar()
+    updateSugar();
+    moveSky();
 }
 
 //fixing arrow motion
