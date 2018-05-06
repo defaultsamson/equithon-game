@@ -59,12 +59,17 @@ function gamePreload() {
 //spawn juice boxes
 function juiceSpawn() {
     //for (i=0; i<3; i++){
-    juicebox = game.add.sprite(game.rnd.integerInRange(0, 800), game.rnd.integerInRange(0, 600), "juicebox"); //at help random spawning...
+    juicebox = game.add.sprite(game.rnd.integerInRange(game.camera.x, game.camera.x+WIDTH), game.rnd.integerInRange(0, 600), "juicebox"); //at help random spawning...
     juicebox.scale.setTo(0.5, 0.5);
     game.physics.enable(juicebox); //gives juicebox sprite a physics body at
     juicebox.body.allowGravity = false;
     juicebox.body.immovable = true;
-
+    this.game.physics.arcade.collide(juicebox, layer1, ()=>{
+        juicebox.destroy();
+        juiceSpawn();
+        console.log("yay");
+    });
+    
     //}
 }
 
@@ -109,6 +114,7 @@ function gameCreate() {
 
     layer1 = map.create("layer1", WORLD_WIDTH, WORLD_HEIGHT, BLOCK_WIDTH, BLOCK_HEIGHT);
     layer1.resizeWorld();
+    game.physics.arcade.enable(layer1);
 
     map.setCollision(COLLISION_IDS, true, layer1);
 
@@ -119,7 +125,7 @@ function gameCreate() {
     player = game.add.sprite(40, 40, "player");
     player.scale.setTo(PLAYER_SCALE, PLAYER_SCALE);
     game.physics.enable(player); // Gives player a physics body
-    player.body.bounce.x = 0.05; // Slightly bouncy off wall
+    player.body.bounce.x = 0.05;game.physics.arcade.enable(layers[3]); // Slightly bouncy off wall
     player.body.collideWorldBounds = true; // Collide with the
     player.animations.add('walk', [0, 1], 4, true);
     player.anchor.setTo(0.5, 0.5);
