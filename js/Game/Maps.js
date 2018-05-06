@@ -3,7 +3,8 @@ var xOffset = 0;
 const HIGH_BOUND = 10; // blocks 
 const LOW_BOUND = 18; // blocks
 
-const pieceNames = ["test1", "test2", "test3", "test4", "test5", "test6", "entrance", "classroom", "belunga", "spiral"];
+const pieceNames = ["test1", "test2", "test3", "test4", "test5", "test6", "entrance",
+                    "classroom", "ruins", "floors", "gym", "soccer", "houses1", "spiral"];
 var pieces = [];
 
 function initMapPieces() {

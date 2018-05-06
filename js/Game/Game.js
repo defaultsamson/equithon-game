@@ -62,11 +62,19 @@ function gamePreload() {
     game.load.json("test4", "assets/test4.json");
     game.load.json("test5", "assets/test5.json");
     game.load.json("test6", "assets/test6.json");
+    game.load.json("ruins", "assets/ruins.json");
 
     game.load.json("entrance", "assets/sec2/entrance.json");
     game.load.json("classroom", "assets/sec2/classroom.json");
+    game.load.json("floors", "assets/sec2/floors.json");
+    game.load.json("gym", "assets/sec2/gym.json");
 
-    game.load.json("belunga", "assets/belunga.json");
+    game.load.json("soccer", "assets/soccer.json");
+    game.load.json("end", "assets/end.json");
+    game.load.json("houses1", "assets/houses1.json");
+
+    //game.load.json("belunga", "assets/belunga.json");
+
     game.load.json("spiral", "assets/spiral.json");
 
     // Loading Images
@@ -166,6 +174,7 @@ function gameCreate() {
     addMap("ruins");
     addMap("ruins");*/
     generateRandomMap(380);
+    addMapByName("end");
 
     spawnJuice();
 
